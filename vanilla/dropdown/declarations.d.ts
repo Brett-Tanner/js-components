@@ -1,6 +1,7 @@
 interface animationInfo {
   name: string;
   individual: boolean;
+  duration: number;
 }
 
 interface animationList {

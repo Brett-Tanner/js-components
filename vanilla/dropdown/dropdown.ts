@@ -50,7 +50,7 @@ function addHoverListeners(
   container.addEventListener("mouseleave", () => {
     renderedItems.forEach((item) => {
       const animation = item.animate(animations[animationInfo.name], {
-        duration: 300,
+        duration: animationInfo.duration,
         iterations: 1,
       });
       animation.reverse();
@@ -76,7 +76,7 @@ function addClickListeners(
         item.animate(animations[animationInfo.name], 300);
       } else {
         const animation = item.animate(animations[animationInfo.name], {
-          duration: 300,
+          duration: animationInfo.duration,
           iterations: 1,
         });
         animation.reverse();
@@ -122,7 +122,7 @@ function listItem(item: itemInfo, classes: string[]) {
 
 function reverseAnimation(item: HTMLLIElement, animationInfo: animationInfo) {
   const animation = item.animate(animations[animationInfo.name], {
-    duration: 300,
+    duration: animationInfo.duration,
     iterations: 1,
   });
   animation.reverse();
