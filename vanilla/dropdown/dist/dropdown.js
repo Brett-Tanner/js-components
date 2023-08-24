@@ -10,17 +10,20 @@ function dropdown(titleInfo, hoverable, animation, items, classes) {
     container.appendChild(dropdownMenu);
     const titleItem = heading(titleInfo, classes.headingClasses);
     if (hoverable) {
-        addHoverListener(container, renderedItems);
+        addHoverListeners(container, renderedItems);
     }
     else {
-        addClickListener(titleItem, renderedItems);
+        addClickListeners(container, titleItem, renderedItems);
     }
     container.prepend(titleItem);
     container.classList.add(...classes.containerClasses, "relative");
     return container;
 }
-function addHoverListener(container, renderedItems) {
+function addHoverListeners(container, renderedItems) {
     container.addEventListener("mouseenter", () => {
+        document.querySelectorAll(".dropdownItem").forEach((item) => {
+            item.classList.add("hidden", "opacity-0");
+        });
         renderedItems.forEach((item) => {
             item.classList.remove("hidden", "opacity-0");
         });
@@ -31,13 +34,20 @@ function addHoverListener(container, renderedItems) {
         });
     });
 }
-function addClickListener(titleItem, renderedItems) {
+function addClickListeners(container, titleItem, renderedItems) {
     titleItem.addEventListener("click", (e) => {
         e.preventDefault();
         renderedItems.forEach((item) => {
             item.classList.toggle("hidden");
             item.classList.toggle("opacity-0");
         });
+    });
+    document.addEventListener("click", (e) => {
+        if (e.target instanceof Node && !container.contains(e.target)) {
+            renderedItems.forEach((item) => {
+                item.classList.add("hidden", "opacity-0");
+            });
+        }
     });
 }
 function heading(titleInfo, classes) {
@@ -55,7 +65,7 @@ function listItem(item, classes) {
     element.innerText = item.text;
     if (element instanceof HTMLAnchorElement)
         element.href = "";
-    li.classList.add(...classes, "hidden", "opacity-0", "z-10");
+    li.classList.add(...classes, "hidden", "opacity-0", "z-10", "dropdownItem");
     li.appendChild(element);
     return li;
 }

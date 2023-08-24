@@ -19,9 +19,9 @@ function dropdown(
 
   const titleItem = heading(titleInfo, classes.headingClasses);
   if (hoverable) {
-    addHoverListener(container, renderedItems);
+    addHoverListeners(container, renderedItems);
   } else {
-    addClickListener(titleItem, renderedItems);
+    addClickListeners(container, titleItem, renderedItems);
   }
   container.prepend(titleItem);
 
@@ -29,15 +29,20 @@ function dropdown(
   return container;
 }
 
-function addHoverListener(
+function addHoverListeners(
   container: HTMLUListElement,
   renderedItems: HTMLLIElement[]
 ) {
+  // When hovered, hide ALL dropdown items then reveal children
   container.addEventListener("mouseenter", () => {
+    document.querySelectorAll(".dropdownItem").forEach((item) => {
+      item.classList.add("hidden", "opacity-0");
+    });
     renderedItems.forEach((item) => {
       item.classList.remove("hidden", "opacity-0");
     });
   });
+  // When the mouse leaves the container, hide all children
   container.addEventListener("mouseleave", () => {
     renderedItems.forEach((item) => {
       item.classList.add("hidden", "opacity-0");
@@ -45,16 +50,26 @@ function addHoverListener(
   });
 }
 
-function addClickListener(
+function addClickListeners(
+  container: HTMLUListElement,
   titleItem: HTMLLIElement,
   renderedItems: HTMLLIElement[]
 ) {
   titleItem.addEventListener("click", (e) => {
+    // Since we need to click the title to open, it can't work as a link
     e.preventDefault();
     renderedItems.forEach((item) => {
       item.classList.toggle("hidden");
       item.classList.toggle("opacity-0");
     });
+  });
+  // Automatically close the dropdown when user clicks outside it
+  document.addEventListener("click", (e) => {
+    if (e.target instanceof Node && !container.contains(e.target)) {
+      renderedItems.forEach((item) => {
+        item.classList.add("hidden", "opacity-0");
+      });
+    }
   });
 }
 
@@ -75,7 +90,7 @@ function listItem(item: itemInfo, classes: string[]) {
   const element = document.createElement(item.elementType);
   element.innerText = item.text;
   if (element instanceof HTMLAnchorElement) element.href = "";
-  li.classList.add(...classes, "hidden", "opacity-0", "z-10");
+  li.classList.add(...classes, "hidden", "opacity-0", "z-10", "dropdownItem");
   li.appendChild(element);
 
   return li;
