@@ -2,6 +2,7 @@ interface animationInfo {
   name: string;
   individual: boolean;
   duration: number;
+  easing: string;
 }
 
 interface animationList {

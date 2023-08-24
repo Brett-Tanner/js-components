@@ -11,7 +11,7 @@ nav.appendChild(dropdown({
     text: "One of Each",
     href: "",
     toggleWidget: "hamburger",
-}, false, { name: "slideDown", individual: false, duration: 300 }, [
+}, false, { name: "slideDown", individual: false, duration: 300, easing: "ease-out" }, [
     { text: "Link", elementType: "a" },
     { text: "Button", elementType: "button" },
     { text: "Just text", elementType: "p" },
@@ -28,9 +28,9 @@ nav.appendChild(dropdown({
 }));
 nav.appendChild(dropdown({
     text: "All Links",
-    href: "https://www.google.com",
+    href: "",
     toggleWidget: "hamburger",
-}, true, { name: "slideRight", individual: false, duration: 300 }, [
+}, true, { name: "slideRight", individual: false, duration: 300, easing: "ease-in" }, [
     { text: "Link", elementType: "a" },
     { text: "Button", elementType: "a" },
     { text: "Just text", elementType: "a" },
@@ -44,7 +44,7 @@ nav.appendChild(dropdown({
     text: "All Buttons",
     href: "",
     toggleWidget: "hamburger",
-}, false, { name: "expandDown", individual: false, duration: 300 }, [
+}, false, { name: "expandDown", individual: true, duration: 300, easing: "ease-in" }, [
     { text: "Button 1", elementType: "button" },
     { text: "Button 2", elementType: "button" },
     { text: "Button 3", elementType: "button" },
@@ -56,9 +56,14 @@ nav.appendChild(dropdown({
 }));
 nav.appendChild(dropdown({
     text: "All Text",
-    href: "https://www.google.com",
+    href: "",
     toggleWidget: "hamburger",
-}, true, { name: "expandRight", individual: false, duration: 300 }, [
+}, true, {
+    name: "expandRight",
+    individual: true,
+    duration: 300,
+    easing: "ease-out",
+}, [
     { text: "Link", elementType: "p" },
     { text: "Button", elementType: "p" },
     { text: "Just text", elementType: "p" },

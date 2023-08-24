@@ -12,48 +12,43 @@ function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
     container.appendChild(dropdownMenu);
     const titleItem = heading(titleInfo, classes.headingClasses);
     if (hoverable) {
-        addHoverListeners(container, renderedItems, animationInfo);
+        addHoverListeners(container, dropdownMenu, renderedItems, animationInfo);
     }
     else {
-        addClickListeners(container, titleItem, renderedItems, animationInfo);
+        addClickListeners(container, dropdownMenu, titleItem, renderedItems, animationInfo);
     }
     container.prepend(titleItem);
     container.classList.add(...classes.containerClasses, "relative");
     return container;
 }
-function addHoverListeners(container, renderedItems, animationInfo) {
-    container.addEventListener("mouseenter", () => {
-        document.querySelectorAll(".dropdownItem").forEach((item) => {
-            item.classList.add(...hiddenClasses);
-        });
-        renderedItems.forEach((item) => {
-            item.classList.remove(...hiddenClasses);
-            item.animate(animations[animationInfo.name], 300);
-        });
-    });
-    container.addEventListener("mouseleave", () => {
-        renderedItems.forEach((item) => {
-            const animation = item.animate(animations[animationInfo.name], {
-                duration: animationInfo.duration,
-                iterations: 1,
-            });
-            animation.reverse();
-            animation.addEventListener("finish", () => {
+function addHoverListeners(container, dropdownMenu, renderedItems, animationInfo) {
+    if (animationInfo.individual) {
+        container.addEventListener("mouseenter", () => {
+            document.querySelectorAll(".dropdownItem").forEach((item) => {
                 item.classList.add(...hiddenClasses);
             });
-        });
-    });
-}
-function addClickListeners(container, titleItem, renderedItems, animationInfo) {
-    titleItem.addEventListener("click", (e) => {
-        e.preventDefault();
-        renderedItems.forEach((item) => {
-            if (item.classList.contains("hidden")) {
+            renderedItems.forEach((item) => {
                 item.classList.remove(...hiddenClasses);
-                item.animate(animations[animationInfo.name], 300);
-            }
-            else {
-                const animation = item.animate(animations[animationInfo.name], {
+                const keyframes = animations[animationInfo.name];
+                keyframes[0].offset =
+                    (renderedItems.indexOf(item) *
+                        (animationInfo.duration / renderedItems.length)) /
+                        animationInfo.duration;
+                item.animate(keyframes, {
+                    duration: animationInfo.duration,
+                    iterations: 1,
+                    easing: animationInfo.easing,
+                });
+            });
+        });
+        container.addEventListener("mouseleave", () => {
+            renderedItems.forEach((item) => {
+                const keyframes = animations[animationInfo.name];
+                keyframes[0].offset =
+                    (renderedItems.indexOf(item) *
+                        (animationInfo.duration / renderedItems.length)) /
+                        animationInfo.duration;
+                const animation = item.animate(keyframes, {
                     duration: animationInfo.duration,
                     iterations: 1,
                 });
@@ -61,16 +56,111 @@ function addClickListeners(container, titleItem, renderedItems, animationInfo) {
                 animation.addEventListener("finish", () => {
                     item.classList.add(...hiddenClasses);
                 });
+            });
+        });
+    }
+    else {
+        container.addEventListener("mouseenter", () => {
+            dropdownMenu.animate(animations[animationInfo.name], {
+                duration: animationInfo.duration,
+                iterations: 1,
+                easing: animationInfo.easing,
+            });
+            renderedItems.forEach((item) => {
+                item.classList.remove(...hiddenClasses);
+            });
+        });
+        container.addEventListener("mouseleave", () => {
+            const animation = dropdownMenu.animate(animations[animationInfo.name], {
+                duration: animationInfo.duration,
+                iterations: 1,
+            });
+            animation.reverse();
+            renderedItems.forEach((item) => {
+                animation.addEventListener("finish", () => {
+                    item.classList.add(...hiddenClasses);
+                });
+            });
+        });
+    }
+}
+function addClickListeners(container, dropdownMenu, titleItem, renderedItems, animationInfo) {
+    if (animationInfo.individual) {
+        titleItem.addEventListener("click", (e) => {
+            e.preventDefault();
+            renderedItems.forEach((item) => {
+                if (item.classList.contains("hidden")) {
+                    item.classList.remove(...hiddenClasses);
+                    const keyframes = animations[animationInfo.name];
+                    keyframes[0].offset =
+                        (renderedItems.indexOf(item) *
+                            (animationInfo.duration / renderedItems.length)) /
+                            animationInfo.duration;
+                    item.animate(keyframes, {
+                        duration: animationInfo.duration,
+                        iterations: 1,
+                        easing: animationInfo.easing,
+                    });
+                }
+                else {
+                    const keyframes = animations[animationInfo.name];
+                    keyframes[0].offset =
+                        (renderedItems.indexOf(item) *
+                            (animationInfo.duration / renderedItems.length)) /
+                            animationInfo.duration;
+                    const animation = item.animate(keyframes, {
+                        duration: animationInfo.duration,
+                        iterations: 1,
+                    });
+                    animation.reverse();
+                    animation.addEventListener("finish", () => {
+                        item.classList.add(...hiddenClasses);
+                    });
+                }
+            });
+        });
+        document.addEventListener("click", (e) => {
+            if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
+                renderedItems.forEach((item) => {
+                    reverseAnimation(item, animationInfo);
+                });
             }
         });
-    });
-    document.addEventListener("click", (e) => {
-        if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
-            renderedItems.forEach((item) => {
-                reverseAnimation(item, animationInfo);
-            });
-        }
-    });
+    }
+    else {
+        titleItem.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (renderedItems[0].classList.contains("hidden")) {
+                dropdownMenu.animate(animations[animationInfo.name], {
+                    duration: animationInfo.duration,
+                    iterations: 1,
+                    easing: animationInfo.easing,
+                });
+                renderedItems.forEach((item) => {
+                    item.classList.remove(...hiddenClasses);
+                });
+            }
+            else {
+                const animation = dropdownMenu.animate(animations[animationInfo.name], {
+                    duration: animationInfo.duration,
+                    iterations: 1,
+                });
+                animation.reverse();
+                animation.addEventListener("finish", () => {
+                    renderedItems.forEach((item) => {
+                        item.classList.add(...hiddenClasses);
+                    });
+                });
+            }
+        });
+        document.addEventListener("click", (e) => {
+            if ((e.target instanceof HTMLLIElement ||
+                e.target instanceof HTMLUListElement) &&
+                !container.contains(e.target)) {
+                reverseAnimation(dropdownMenu, animationInfo);
+            }
+        });
+    }
 }
 function heading(titleInfo, classes) {
     const titleItem = document.createElement("li");

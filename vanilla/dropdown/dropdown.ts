@@ -23,9 +23,15 @@ function dropdown(
 
   const titleItem = heading(titleInfo, classes.headingClasses);
   if (hoverable) {
-    addHoverListeners(container, renderedItems, animationInfo);
+    addHoverListeners(container, dropdownMenu, renderedItems, animationInfo);
   } else {
-    addClickListeners(container, titleItem, renderedItems, animationInfo);
+    addClickListeners(
+      container,
+      dropdownMenu,
+      titleItem,
+      renderedItems,
+      animationInfo
+    );
   }
   container.prepend(titleItem);
 
@@ -35,49 +41,39 @@ function dropdown(
 
 function addHoverListeners(
   container: HTMLUListElement,
+  dropdownMenu: HTMLUListElement,
   renderedItems: HTMLLIElement[],
   animationInfo: animationInfo
 ) {
-  // When hovered, hide ALL dropdown items then reveal children
-  container.addEventListener("mouseenter", () => {
-    document.querySelectorAll(".dropdownItem").forEach((item) => {
-      item.classList.add(...hiddenClasses);
-    });
-    renderedItems.forEach((item) => {
-      item.classList.remove(...hiddenClasses);
-      item.animate(animations[animationInfo.name], 300);
-    });
-  });
-  // When the mouse leaves the container, hide all children
-  container.addEventListener("mouseleave", () => {
-    renderedItems.forEach((item) => {
-      const animation = item.animate(animations[animationInfo.name], {
-        duration: animationInfo.duration,
-        iterations: 1,
-      });
-      animation.reverse();
-      animation.addEventListener("finish", () => {
+  if (animationInfo.individual) {
+    // When hovered, hide ALL dropdown items then reveal children
+    container.addEventListener("mouseenter", () => {
+      document.querySelectorAll(".dropdownItem").forEach((item) => {
         item.classList.add(...hiddenClasses);
       });
-    });
-  });
-}
-
-function addClickListeners(
-  container: HTMLUListElement,
-  titleItem: HTMLLIElement,
-  renderedItems: HTMLLIElement[],
-  animationInfo: animationInfo
-) {
-  titleItem.addEventListener("click", (e) => {
-    // Since we need to click the title to open, it can't work as a link
-    e.preventDefault();
-    renderedItems.forEach((item) => {
-      if (item.classList.contains("hidden")) {
+      renderedItems.forEach((item) => {
         item.classList.remove(...hiddenClasses);
-        item.animate(animations[animationInfo.name], 300);
-      } else {
-        const animation = item.animate(animations[animationInfo.name], {
+        const keyframes = animations[animationInfo.name];
+        keyframes[0].offset =
+          (renderedItems.indexOf(item) *
+            (animationInfo.duration / renderedItems.length)) /
+          animationInfo.duration;
+        item.animate(keyframes, {
+          duration: animationInfo.duration,
+          iterations: 1,
+          easing: animationInfo.easing,
+        });
+      });
+    });
+    // When the mouse leaves the container, hide all children
+    container.addEventListener("mouseleave", () => {
+      renderedItems.forEach((item) => {
+        const keyframes = animations[animationInfo.name];
+        keyframes[0].offset =
+          (renderedItems.indexOf(item) *
+            (animationInfo.duration / renderedItems.length)) /
+          animationInfo.duration;
+        const animation = item.animate(keyframes, {
           duration: animationInfo.duration,
           iterations: 1,
         });
@@ -85,17 +81,122 @@ function addClickListeners(
         animation.addEventListener("finish", () => {
           item.classList.add(...hiddenClasses);
         });
+      });
+    });
+  } else {
+    container.addEventListener("mouseenter", () => {
+      dropdownMenu.animate(animations[animationInfo.name], {
+        duration: animationInfo.duration,
+        iterations: 1,
+        easing: animationInfo.easing,
+      });
+      renderedItems.forEach((item) => {
+        item.classList.remove(...hiddenClasses);
+      });
+    });
+    // When the mouse leaves the container, hide all children
+    container.addEventListener("mouseleave", () => {
+      const animation = dropdownMenu.animate(animations[animationInfo.name], {
+        duration: animationInfo.duration,
+        iterations: 1,
+      });
+      animation.reverse();
+
+      renderedItems.forEach((item) => {
+        animation.addEventListener("finish", () => {
+          item.classList.add(...hiddenClasses);
+        });
+      });
+    });
+  }
+}
+
+function addClickListeners(
+  container: HTMLUListElement,
+  dropdownMenu: HTMLUListElement,
+  titleItem: HTMLLIElement,
+  renderedItems: HTMLLIElement[],
+  animationInfo: animationInfo
+) {
+  if (animationInfo.individual) {
+    titleItem.addEventListener("click", (e) => {
+      // Since we need to click the title to open, it can't work as a link
+      e.preventDefault();
+      renderedItems.forEach((item) => {
+        if (item.classList.contains("hidden")) {
+          item.classList.remove(...hiddenClasses);
+          const keyframes = animations[animationInfo.name];
+          keyframes[0].offset =
+            (renderedItems.indexOf(item) *
+              (animationInfo.duration / renderedItems.length)) /
+            animationInfo.duration;
+          item.animate(keyframes, {
+            duration: animationInfo.duration,
+            iterations: 1,
+            easing: animationInfo.easing,
+          });
+        } else {
+          const keyframes = animations[animationInfo.name];
+          keyframes[0].offset =
+            (renderedItems.indexOf(item) *
+              (animationInfo.duration / renderedItems.length)) /
+            animationInfo.duration;
+          const animation = item.animate(keyframes, {
+            duration: animationInfo.duration,
+            iterations: 1,
+          });
+          animation.reverse();
+          animation.addEventListener("finish", () => {
+            item.classList.add(...hiddenClasses);
+          });
+        }
+      });
+    });
+    // Automatically close the dropdown when user clicks outside it
+    document.addEventListener("click", (e) => {
+      if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
+        renderedItems.forEach((item) => {
+          reverseAnimation(item, animationInfo);
+        });
       }
     });
-  });
-  // Automatically close the dropdown when user clicks outside it
-  document.addEventListener("click", (e) => {
-    if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
-      renderedItems.forEach((item) => {
-        reverseAnimation(item, animationInfo);
-      });
-    }
-  });
+  } else {
+    titleItem.addEventListener("click", (e) => {
+      // Since we need to click the title to open, it can't work as a link
+      e.preventDefault();
+      if (renderedItems[0].classList.contains("hidden")) {
+        dropdownMenu.animate(animations[animationInfo.name], {
+          duration: animationInfo.duration,
+          iterations: 1,
+          easing: animationInfo.easing,
+        });
+        renderedItems.forEach((item) => {
+          item.classList.remove(...hiddenClasses);
+        });
+      } else {
+        const animation = dropdownMenu.animate(animations[animationInfo.name], {
+          duration: animationInfo.duration,
+          iterations: 1,
+        });
+        animation.reverse();
+        animation.addEventListener("finish", () => {
+          renderedItems.forEach((item) => {
+            item.classList.add(...hiddenClasses);
+          });
+        });
+      }
+    });
+    // Automatically close the dropdown when user clicks outside it
+    document.addEventListener("click", (e) => {
+      if (
+        (e.target instanceof HTMLLIElement ||
+          e.target instanceof HTMLUListElement) &&
+        !container.contains(e.target)
+      ) {
+        reverseAnimation(dropdownMenu, animationInfo);
+      }
+    });
+  }
 }
 
 function heading(titleInfo: titleInfo, classes: string[]) {
@@ -122,7 +223,10 @@ function listItem(item: itemInfo, classes: string[]) {
   return li;
 }
 
-function reverseAnimation(item: HTMLLIElement, animationInfo: animationInfo) {
+function reverseAnimation(
+  item: HTMLLIElement | HTMLUListElement,
+  animationInfo: animationInfo
+) {
   const animation = item.animate(animations[animationInfo.name], {
     duration: animationInfo.duration,
     iterations: 1,
