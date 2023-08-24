@@ -1,6 +1,7 @@
 import { dropdown } from "./dropdown.js";
 
 const nav = document.createElement("nav");
+const headingClasses = ["text-center", "text-3xl", "text-cyan-400"];
 const itemClasses = [
   "text-gray-100",
   "hover:text-white",
@@ -26,12 +27,7 @@ nav.appendChild(
     {
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
-      headingClasses: [
-        "text-center",
-        "text-3xl",
-        "text-gray-100",
-        "hover:text-white",
-      ],
+      headingClasses: [...headingClasses],
       itemClasses: [...itemClasses],
     }
   )
@@ -54,7 +50,7 @@ nav.appendChild(
     {
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
-      headingClasses: ["text-center", "text-3xl", "text-cyan-400"],
+      headingClasses: [...headingClasses],
       itemClasses: [...itemClasses],
     }
   )
@@ -77,7 +73,7 @@ nav.appendChild(
     {
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
-      headingClasses: ["text-center", "text-3xl", "text-cyan-400"],
+      headingClasses: [...headingClasses],
       itemClasses: [...itemClasses, "origin-top"],
     }
   )
@@ -105,7 +101,7 @@ nav.appendChild(
     {
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
-      headingClasses: ["text-center", "text-3xl", "text-cyan-400"],
+      headingClasses: [...headingClasses],
       itemClasses: [...itemClasses, "origin-left"],
     }
   )

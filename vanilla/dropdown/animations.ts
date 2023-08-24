@@ -16,3 +16,11 @@ export const animations: animationList = {
     { opacity: 1, transform: "scaleX(1)" },
   ],
 };
+
+export function calcOffset(
+  index: number,
+  staggerTime: number,
+  duration: number
+) {
+  return (index * staggerTime) / duration;
+}

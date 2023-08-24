@@ -1,4 +1,4 @@
-import { animations } from "./animations.js";
+import { animations, calcOffset } from "./animations.js";
 
 const hiddenClasses = ["hidden", "opacity-0"];
 
@@ -54,10 +54,11 @@ function addHoverListeners(
       renderedItems.forEach((item) => {
         item.classList.remove(...hiddenClasses);
         const keyframes = animations[animationInfo.name];
-        keyframes[0].offset =
-          (renderedItems.indexOf(item) *
-            (animationInfo.duration / renderedItems.length)) /
-          animationInfo.duration;
+        keyframes[0].offset = calcOffset(
+          renderedItems.indexOf(item),
+          animationInfo.duration / renderedItems.length,
+          animationInfo.duration
+        );
         item.animate(keyframes, {
           duration: animationInfo.duration,
           iterations: 1,
@@ -69,10 +70,11 @@ function addHoverListeners(
     container.addEventListener("mouseleave", () => {
       renderedItems.forEach((item) => {
         const keyframes = animations[animationInfo.name];
-        keyframes[0].offset =
-          (renderedItems.indexOf(item) *
-            (animationInfo.duration / renderedItems.length)) /
-          animationInfo.duration;
+        keyframes[0].offset = calcOffset(
+          renderedItems.indexOf(item),
+          animationInfo.duration / renderedItems.length,
+          animationInfo.duration
+        );
         const animation = item.animate(keyframes, {
           duration: animationInfo.duration,
           iterations: 1,
@@ -126,10 +128,11 @@ function addClickListeners(
         if (item.classList.contains("hidden")) {
           item.classList.remove(...hiddenClasses);
           const keyframes = animations[animationInfo.name];
-          keyframes[0].offset =
-            (renderedItems.indexOf(item) *
-              (animationInfo.duration / renderedItems.length)) /
-            animationInfo.duration;
+          keyframes[0].offset = calcOffset(
+            renderedItems.indexOf(item),
+            animationInfo.duration / renderedItems.length,
+            animationInfo.duration
+          );
           item.animate(keyframes, {
             duration: animationInfo.duration,
             iterations: 1,
@@ -137,10 +140,11 @@ function addClickListeners(
           });
         } else {
           const keyframes = animations[animationInfo.name];
-          keyframes[0].offset =
-            (renderedItems.indexOf(item) *
-              (animationInfo.duration / renderedItems.length)) /
-            animationInfo.duration;
+          keyframes[0].offset = calcOffset(
+            renderedItems.indexOf(item),
+            animationInfo.duration / renderedItems.length,
+            animationInfo.duration
+          );
           const animation = item.animate(keyframes, {
             duration: animationInfo.duration,
             iterations: 1,

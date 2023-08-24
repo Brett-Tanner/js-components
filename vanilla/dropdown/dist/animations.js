@@ -16,4 +16,7 @@ export const animations = {
         { opacity: 1, transform: "scaleX(1)" },
     ],
 };
+export function calcOffset(index, staggerTime, duration) {
+    return (index * staggerTime) / duration;
+}
 //# sourceMappingURL=animations.js.map
