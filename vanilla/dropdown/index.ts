@@ -4,9 +4,12 @@ const nav = document.createElement("nav");
 
 nav.appendChild(
   dropdown(
-    "One of Each",
-    "click",
-    "hamburger",
+    {
+      text: "One of Each",
+      href: "",
+      toggleWidget: "hamburger",
+    },
+    false,
     "",
     [
       { text: "Link", elementType: "a" },
@@ -34,9 +37,12 @@ nav.appendChild(
 
 nav.appendChild(
   dropdown(
-    "All Links",
-    "hover",
-    "hamburger",
+    {
+      text: "All Links",
+      href: "https://www.google.com",
+      toggleWidget: "hamburger",
+    },
+    true,
     "",
     [
       { text: "Link", elementType: "a" },
@@ -59,9 +65,12 @@ nav.appendChild(
 
 nav.appendChild(
   dropdown(
-    "All Buttons",
-    "click",
-    "hamburger",
+    {
+      text: "All Buttons",
+      href: "",
+      toggleWidget: "hamburger",
+    },
+    false,
     "",
     [
       { text: "Button 1", elementType: "button" },
@@ -79,9 +88,12 @@ nav.appendChild(
 
 nav.appendChild(
   dropdown(
-    "All text",
-    "hover",
-    "hamburger",
+    {
+      text: "All Text",
+      href: "https://www.google.com",
+      toggleWidget: "hamburger",
+    },
+    true,
     "",
     [
       { text: "Link", elementType: "p" },

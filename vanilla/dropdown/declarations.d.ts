@@ -5,11 +5,15 @@ interface dropdownComponentClasses {
   itemClasses: string[];
 }
 
+interface titleInfo {
+  text: string;
+  href: string;
+  toggleWidget: toggleWidget;
+}
+
 interface itemInfo {
   text: string;
   elementType: "a" | "button" | "p";
 }
-
-type toggleMethod = "click" | "hover";
 
 type toggleWidget = "hamburger" | "plus" | "triangle";
