@@ -1,5 +1,7 @@
 import { animations } from "./animations.js";
 
+const hiddenClasses = ["hidden", "opacity-0"];
+
 function dropdown(
   titleInfo: titleInfo,
   hoverable: boolean,
@@ -39,10 +41,10 @@ function addHoverListeners(
   // When hovered, hide ALL dropdown items then reveal children
   container.addEventListener("mouseenter", () => {
     document.querySelectorAll(".dropdownItem").forEach((item) => {
-      item.classList.add("hidden", "opacity-0");
+      item.classList.add(...hiddenClasses);
     });
     renderedItems.forEach((item) => {
-      item.classList.remove("hidden", "opacity-0");
+      item.classList.remove(...hiddenClasses);
       item.animate(animations[animationInfo.name], 300);
     });
   });
@@ -55,7 +57,7 @@ function addHoverListeners(
       });
       animation.reverse();
       animation.addEventListener("finish", () => {
-        item.classList.add("hidden", "opacity-0");
+        item.classList.add(...hiddenClasses);
       });
     });
   });
@@ -72,7 +74,7 @@ function addClickListeners(
     e.preventDefault();
     renderedItems.forEach((item) => {
       if (item.classList.contains("hidden")) {
-        item.classList.remove("hidden", "opacity-0");
+        item.classList.remove(...hiddenClasses);
         item.animate(animations[animationInfo.name], 300);
       } else {
         const animation = item.animate(animations[animationInfo.name], {
@@ -81,7 +83,7 @@ function addClickListeners(
         });
         animation.reverse();
         animation.addEventListener("finish", () => {
-          item.classList.add("hidden", "opacity-0");
+          item.classList.add(...hiddenClasses);
         });
       }
     });
@@ -114,7 +116,7 @@ function listItem(item: itemInfo, classes: string[]) {
   element.innerText = item.text;
   if (element instanceof HTMLAnchorElement) element.href = "";
 
-  li.classList.add(...classes, "hidden", "opacity-0", "z-10", "dropdownItem");
+  li.classList.add(...classes, ...hiddenClasses, "z-10", "dropdownItem");
   li.appendChild(element);
 
   return li;
@@ -127,7 +129,7 @@ function reverseAnimation(item: HTMLLIElement, animationInfo: animationInfo) {
   });
   animation.reverse();
   animation.addEventListener("finish", () => {
-    item.classList.add("hidden", "opacity-0");
+    item.classList.add(...hiddenClasses);
   });
 }
 

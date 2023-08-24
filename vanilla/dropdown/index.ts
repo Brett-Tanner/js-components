@@ -1,6 +1,13 @@
 import { dropdown } from "./dropdown.js";
 
 const nav = document.createElement("nav");
+const itemClasses = [
+  "text-gray-100",
+  "hover:text-white",
+  "bg-cyan-800",
+  "hover:bg-cyan-700",
+  "p-3",
+];
 
 nav.appendChild(
   dropdown(
@@ -25,12 +32,7 @@ nav.appendChild(
         "text-gray-100",
         "hover:text-white",
       ],
-      itemClasses: [
-        "text-gray-100",
-        "hover:text-white",
-        "bg-cyan-800",
-        "hover:bg-cyan-700",
-      ],
+      itemClasses: [...itemClasses],
     }
   )
 );
@@ -53,12 +55,7 @@ nav.appendChild(
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
       headingClasses: ["text-center", "text-3xl", "text-cyan-400"],
-      itemClasses: [
-        "text-pink-800",
-        "hover:text-pink-300",
-        "bg-amber-300",
-        "hover:bg-amber-200",
-      ],
+      itemClasses: [...itemClasses],
     }
   )
 );
@@ -71,7 +68,7 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     false,
-    { name: "slideDown", individual: false, duration: 300 },
+    { name: "expandDown", individual: false, duration: 300 },
     [
       { text: "Button 1", elementType: "button" },
       { text: "Button 2", elementType: "button" },
@@ -81,7 +78,7 @@ nav.appendChild(
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
       headingClasses: ["text-center", "text-3xl", "text-cyan-400"],
-      itemClasses: ["text-gray-200"],
+      itemClasses: [...itemClasses, "origin-top"],
     }
   )
 );
@@ -94,7 +91,7 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     true,
-    { name: "slideDown", individual: false, duration: 300 },
+    { name: "expandRight", individual: false, duration: 300 },
     [
       { text: "Link", elementType: "p" },
       { text: "Button", elementType: "p" },
@@ -104,7 +101,7 @@ nav.appendChild(
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
       headingClasses: ["text-center", "text-3xl", "text-cyan-400"],
-      itemClasses: ["text-gray-200"],
+      itemClasses: [...itemClasses, "origin-left"],
     }
   )
 );

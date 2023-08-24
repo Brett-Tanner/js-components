@@ -1,4 +1,5 @@
 import { animations } from "./animations.js";
+const hiddenClasses = ["hidden", "opacity-0"];
 function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
     const container = document.createElement("ul");
     const dropdownMenu = document.createElement("ul");
@@ -23,22 +24,22 @@ function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
 function addHoverListeners(container, renderedItems, animationInfo) {
     container.addEventListener("mouseenter", () => {
         document.querySelectorAll(".dropdownItem").forEach((item) => {
-            item.classList.add("hidden", "opacity-0");
+            item.classList.add(...hiddenClasses);
         });
         renderedItems.forEach((item) => {
-            item.classList.remove("hidden", "opacity-0");
+            item.classList.remove(...hiddenClasses);
             item.animate(animations[animationInfo.name], 300);
         });
     });
     container.addEventListener("mouseleave", () => {
         renderedItems.forEach((item) => {
             const animation = item.animate(animations[animationInfo.name], {
-                duration: 300,
+                duration: animationInfo.duration,
                 iterations: 1,
             });
             animation.reverse();
             animation.addEventListener("finish", () => {
-                item.classList.add("hidden", "opacity-0");
+                item.classList.add(...hiddenClasses);
             });
         });
     });
@@ -48,17 +49,17 @@ function addClickListeners(container, titleItem, renderedItems, animationInfo) {
         e.preventDefault();
         renderedItems.forEach((item) => {
             if (item.classList.contains("hidden")) {
-                item.classList.remove("hidden", "opacity-0");
+                item.classList.remove(...hiddenClasses);
                 item.animate(animations[animationInfo.name], 300);
             }
             else {
                 const animation = item.animate(animations[animationInfo.name], {
-                    duration: 300,
+                    duration: animationInfo.duration,
                     iterations: 1,
                 });
                 animation.reverse();
                 animation.addEventListener("finish", () => {
-                    item.classList.add("hidden", "opacity-0");
+                    item.classList.add(...hiddenClasses);
                 });
             }
         });
@@ -86,18 +87,18 @@ function listItem(item, classes) {
     element.innerText = item.text;
     if (element instanceof HTMLAnchorElement)
         element.href = "";
-    li.classList.add(...classes, "hidden", "opacity-0", "z-10", "dropdownItem");
+    li.classList.add(...classes, ...hiddenClasses, "z-10", "dropdownItem");
     li.appendChild(element);
     return li;
 }
 function reverseAnimation(item, animationInfo) {
     const animation = item.animate(animations[animationInfo.name], {
-        duration: 300,
+        duration: animationInfo.duration,
         iterations: 1,
     });
     animation.reverse();
     animation.addEventListener("finish", () => {
-        item.classList.add("hidden", "opacity-0");
+        item.classList.add(...hiddenClasses);
     });
 }
 export { dropdown };
