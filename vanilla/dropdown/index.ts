@@ -10,7 +10,7 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     false,
-    "",
+    { name: "slideDown", individual: false },
     [
       { text: "Link", elementType: "a" },
       { text: "Button", elementType: "button" },
@@ -43,7 +43,7 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     true,
-    "",
+    { name: "slideRight", individual: false },
     [
       { text: "Link", elementType: "a" },
       { text: "Button", elementType: "a" },
@@ -71,7 +71,7 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     false,
-    "",
+    { name: "slideDown", individual: false },
     [
       { text: "Button 1", elementType: "button" },
       { text: "Button 2", elementType: "button" },
@@ -94,7 +94,7 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     true,
-    "",
+    { name: "slideDown", individual: false },
     [
       { text: "Link", elementType: "p" },
       { text: "Button", elementType: "p" },

@@ -1,3 +1,12 @@
+interface animationInfo {
+  name: string;
+  individual: boolean;
+}
+
+interface animationList {
+  [name: string]: Keyframe[];
+}
+
 interface dropdownComponentClasses {
   containerClasses: string[];
   dropdownClasses: string[];

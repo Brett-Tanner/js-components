@@ -1,7 +1,9 @@
+import { animations } from "./animations.js";
+
 function dropdown(
   titleInfo: titleInfo,
   hoverable: boolean,
-  animation: string,
+  animationInfo: animationInfo,
   items: itemInfo[],
   classes: dropdownComponentClasses
 ) {
@@ -19,9 +21,9 @@ function dropdown(
 
   const titleItem = heading(titleInfo, classes.headingClasses);
   if (hoverable) {
-    addHoverListeners(container, renderedItems);
+    addHoverListeners(container, renderedItems, animationInfo);
   } else {
-    addClickListeners(container, titleItem, renderedItems);
+    addClickListeners(container, titleItem, renderedItems, animationInfo);
   }
   container.prepend(titleItem);
 
@@ -31,7 +33,8 @@ function dropdown(
 
 function addHoverListeners(
   container: HTMLUListElement,
-  renderedItems: HTMLLIElement[]
+  renderedItems: HTMLLIElement[],
+  animationInfo: animationInfo
 ) {
   // When hovered, hide ALL dropdown items then reveal children
   container.addEventListener("mouseenter", () => {
@@ -40,12 +43,20 @@ function addHoverListeners(
     });
     renderedItems.forEach((item) => {
       item.classList.remove("hidden", "opacity-0");
+      item.animate(animations[animationInfo.name], 300);
     });
   });
   // When the mouse leaves the container, hide all children
   container.addEventListener("mouseleave", () => {
     renderedItems.forEach((item) => {
-      item.classList.add("hidden", "opacity-0");
+      const animation = item.animate(animations[animationInfo.name], {
+        duration: 300,
+        iterations: 1,
+      });
+      animation.reverse();
+      animation.addEventListener("finish", () => {
+        item.classList.add("hidden", "opacity-0");
+      });
     });
   });
 }
@@ -53,21 +64,33 @@ function addHoverListeners(
 function addClickListeners(
   container: HTMLUListElement,
   titleItem: HTMLLIElement,
-  renderedItems: HTMLLIElement[]
+  renderedItems: HTMLLIElement[],
+  animationInfo: animationInfo
 ) {
   titleItem.addEventListener("click", (e) => {
     // Since we need to click the title to open, it can't work as a link
     e.preventDefault();
     renderedItems.forEach((item) => {
-      item.classList.toggle("hidden");
-      item.classList.toggle("opacity-0");
+      if (item.classList.contains("hidden")) {
+        item.classList.remove("hidden", "opacity-0");
+        item.animate(animations[animationInfo.name], 300);
+      } else {
+        const animation = item.animate(animations[animationInfo.name], {
+          duration: 300,
+          iterations: 1,
+        });
+        animation.reverse();
+        animation.addEventListener("finish", () => {
+          item.classList.add("hidden", "opacity-0");
+        });
+      }
     });
   });
   // Automatically close the dropdown when user clicks outside it
   document.addEventListener("click", (e) => {
-    if (e.target instanceof Node && !container.contains(e.target)) {
+    if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
       renderedItems.forEach((item) => {
-        item.classList.add("hidden", "opacity-0");
+        reverseAnimation(item, animationInfo);
       });
     }
   });
@@ -90,10 +113,22 @@ function listItem(item: itemInfo, classes: string[]) {
   const element = document.createElement(item.elementType);
   element.innerText = item.text;
   if (element instanceof HTMLAnchorElement) element.href = "";
+
   li.classList.add(...classes, "hidden", "opacity-0", "z-10", "dropdownItem");
   li.appendChild(element);
 
   return li;
+}
+
+function reverseAnimation(item: HTMLLIElement, animationInfo: animationInfo) {
+  const animation = item.animate(animations[animationInfo.name], {
+    duration: 300,
+    iterations: 1,
+  });
+  animation.reverse();
+  animation.addEventListener("finish", () => {
+    item.classList.add("hidden", "opacity-0");
+  });
 }
 
 export { dropdown };

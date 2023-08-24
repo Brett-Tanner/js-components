@@ -4,7 +4,7 @@ nav.appendChild(dropdown({
     text: "One of Each",
     href: "",
     toggleWidget: "hamburger",
-}, false, "", [
+}, false, { name: "slideDown", individual: false }, [
     { text: "Link", elementType: "a" },
     { text: "Button", elementType: "button" },
     { text: "Just text", elementType: "p" },
@@ -28,7 +28,7 @@ nav.appendChild(dropdown({
     text: "All Links",
     href: "https://www.google.com",
     toggleWidget: "hamburger",
-}, true, "", [
+}, true, { name: "slideRight", individual: false }, [
     { text: "Link", elementType: "a" },
     { text: "Button", elementType: "a" },
     { text: "Just text", elementType: "a" },
@@ -47,7 +47,7 @@ nav.appendChild(dropdown({
     text: "All Buttons",
     href: "",
     toggleWidget: "hamburger",
-}, false, "", [
+}, false, { name: "slideDown", individual: false }, [
     { text: "Button 1", elementType: "button" },
     { text: "Button 2", elementType: "button" },
     { text: "Button 3", elementType: "button" },
@@ -61,7 +61,7 @@ nav.appendChild(dropdown({
     text: "All Text",
     href: "https://www.google.com",
     toggleWidget: "hamburger",
-}, true, "", [
+}, true, { name: "slideDown", individual: false }, [
     { text: "Link", elementType: "p" },
     { text: "Button", elementType: "p" },
     { text: "Just text", elementType: "p" },

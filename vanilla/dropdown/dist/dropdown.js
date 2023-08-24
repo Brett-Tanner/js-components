@@ -1,4 +1,5 @@
-function dropdown(titleInfo, hoverable, animation, items, classes) {
+import { animations } from "./animations.js";
+function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
     const container = document.createElement("ul");
     const dropdownMenu = document.createElement("ul");
     const renderedItems = items.map((item) => {
@@ -10,42 +11,62 @@ function dropdown(titleInfo, hoverable, animation, items, classes) {
     container.appendChild(dropdownMenu);
     const titleItem = heading(titleInfo, classes.headingClasses);
     if (hoverable) {
-        addHoverListeners(container, renderedItems);
+        addHoverListeners(container, renderedItems, animationInfo);
     }
     else {
-        addClickListeners(container, titleItem, renderedItems);
+        addClickListeners(container, titleItem, renderedItems, animationInfo);
     }
     container.prepend(titleItem);
     container.classList.add(...classes.containerClasses, "relative");
     return container;
 }
-function addHoverListeners(container, renderedItems) {
+function addHoverListeners(container, renderedItems, animationInfo) {
     container.addEventListener("mouseenter", () => {
         document.querySelectorAll(".dropdownItem").forEach((item) => {
             item.classList.add("hidden", "opacity-0");
         });
         renderedItems.forEach((item) => {
             item.classList.remove("hidden", "opacity-0");
+            item.animate(animations[animationInfo.name], 300);
         });
     });
     container.addEventListener("mouseleave", () => {
         renderedItems.forEach((item) => {
-            item.classList.add("hidden", "opacity-0");
+            const animation = item.animate(animations[animationInfo.name], {
+                duration: 300,
+                iterations: 1,
+            });
+            animation.reverse();
+            animation.addEventListener("finish", () => {
+                item.classList.add("hidden", "opacity-0");
+            });
         });
     });
 }
-function addClickListeners(container, titleItem, renderedItems) {
+function addClickListeners(container, titleItem, renderedItems, animationInfo) {
     titleItem.addEventListener("click", (e) => {
         e.preventDefault();
         renderedItems.forEach((item) => {
-            item.classList.toggle("hidden");
-            item.classList.toggle("opacity-0");
+            if (item.classList.contains("hidden")) {
+                item.classList.remove("hidden", "opacity-0");
+                item.animate(animations[animationInfo.name], 300);
+            }
+            else {
+                const animation = item.animate(animations[animationInfo.name], {
+                    duration: 300,
+                    iterations: 1,
+                });
+                animation.reverse();
+                animation.addEventListener("finish", () => {
+                    item.classList.add("hidden", "opacity-0");
+                });
+            }
         });
     });
     document.addEventListener("click", (e) => {
-        if (e.target instanceof Node && !container.contains(e.target)) {
+        if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
             renderedItems.forEach((item) => {
-                item.classList.add("hidden", "opacity-0");
+                reverseAnimation(item, animationInfo);
             });
         }
     });
@@ -68,6 +89,16 @@ function listItem(item, classes) {
     li.classList.add(...classes, "hidden", "opacity-0", "z-10", "dropdownItem");
     li.appendChild(element);
     return li;
+}
+function reverseAnimation(item, animationInfo) {
+    const animation = item.animate(animations[animationInfo.name], {
+        duration: 300,
+        iterations: 1,
+    });
+    animation.reverse();
+    animation.addEventListener("finish", () => {
+        item.classList.add("hidden", "opacity-0");
+    });
 }
 export { dropdown };
 //# sourceMappingURL=dropdown.js.map
