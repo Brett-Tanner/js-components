@@ -1,4 +1,4 @@
-import { animations, calcOffset } from "./animations.js";
+import { animations, addOffset } from "./animations.js";
 
 const hiddenClasses = ["hidden", "opacity-0"];
 
@@ -54,7 +54,8 @@ function addHoverListeners(
       renderedItems.forEach((item) => {
         item.classList.remove(...hiddenClasses);
         const keyframes = animations[animationInfo.name];
-        keyframes[0].offset = calcOffset(
+        addOffset(
+          keyframes,
           renderedItems.indexOf(item),
           animationInfo.duration / renderedItems.length,
           animationInfo.duration
@@ -70,7 +71,8 @@ function addHoverListeners(
     container.addEventListener("mouseleave", () => {
       renderedItems.forEach((item) => {
         const keyframes = animations[animationInfo.name];
-        keyframes[0].offset = calcOffset(
+        addOffset(
+          keyframes,
           renderedItems.indexOf(item),
           animationInfo.duration / renderedItems.length,
           animationInfo.duration
@@ -128,7 +130,8 @@ function addClickListeners(
         if (item.classList.contains("hidden")) {
           item.classList.remove(...hiddenClasses);
           const keyframes = animations[animationInfo.name];
-          keyframes[0].offset = calcOffset(
+          addOffset(
+            keyframes,
             renderedItems.indexOf(item),
             animationInfo.duration / renderedItems.length,
             animationInfo.duration
@@ -140,7 +143,8 @@ function addClickListeners(
           });
         } else {
           const keyframes = animations[animationInfo.name];
-          keyframes[0].offset = calcOffset(
+          addOffset(
+            keyframes,
             renderedItems.indexOf(item),
             animationInfo.duration / renderedItems.length,
             animationInfo.duration

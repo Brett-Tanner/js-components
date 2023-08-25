@@ -40,15 +40,15 @@ nav.appendChild(dropdown({
     text: "All Buttons",
     href: "",
     toggleWidget: "hamburger",
-}, false, { name: "expandDown", individual: true, duration: 300, easing: "ease-in" }, [
+}, false, { name: "expandDown", individual: false, duration: 300, easing: "ease-in" }, [
     { text: "Button 1", elementType: "button" },
     { text: "Button 2", elementType: "button" },
     { text: "Button 3", elementType: "button" },
 ], {
     containerClasses: ["grow"],
-    dropdownClasses: ["p-3"],
+    dropdownClasses: ["p-3", "origin-top"],
     headingClasses: [...headingClasses],
-    itemClasses: [...itemClasses, "origin-top"],
+    itemClasses: [...itemClasses],
 }));
 nav.appendChild(dropdown({
     text: "All Text",

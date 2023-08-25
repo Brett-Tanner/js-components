@@ -64,7 +64,7 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     false,
-    { name: "expandDown", individual: true, duration: 300, easing: "ease-in" },
+    { name: "expandDown", individual: false, duration: 300, easing: "ease-in" },
     [
       { text: "Button 1", elementType: "button" },
       { text: "Button 2", elementType: "button" },
@@ -72,9 +72,9 @@ nav.appendChild(
     ],
     {
       containerClasses: ["grow"],
-      dropdownClasses: ["p-3"],
+      dropdownClasses: ["p-3", "origin-top"],
       headingClasses: [...headingClasses],
-      itemClasses: [...itemClasses, "origin-top"],
+      itemClasses: [...itemClasses],
     }
   )
 );
