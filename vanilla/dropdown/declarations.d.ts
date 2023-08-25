@@ -19,7 +19,6 @@ interface dropdownComponentClasses {
 interface titleInfo {
   text: string;
   href: string;
-  toggleWidget: string;
 }
 
 interface itemInfo {

@@ -11,7 +11,6 @@ const itemClasses = [
 nav.appendChild(dropdown({
     text: "One of Each",
     href: "",
-    toggleWidget: "hamburger",
 }, false, { name: "slideDown", individual: false, duration: 300, easing: "ease-out" }, [
     { text: "Link", elementType: "a" },
     { text: "Button", elementType: "button" },
@@ -25,7 +24,6 @@ nav.appendChild(dropdown({
 nav.appendChild(dropdown({
     text: "All Links",
     href: "",
-    toggleWidget: "hamburger",
 }, true, { name: "slideRight", individual: false, duration: 300, easing: "ease-in" }, [
     { text: "Link", elementType: "a" },
     { text: "Button", elementType: "a" },
@@ -49,7 +47,6 @@ nav.appendChild(dropdown({
 nav.appendChild(dropdown({
     text: "All Buttons",
     href: "",
-    toggleWidget: "hamburger",
 }, false, {
     name: "expandDown",
     individual: false,
@@ -68,7 +65,6 @@ nav.appendChild(dropdown({
 nav.appendChild(dropdown({
     text: "All Text",
     href: "",
-    toggleWidget: "hamburger",
 }, true, {
     name: "expandRight",
     individual: true,

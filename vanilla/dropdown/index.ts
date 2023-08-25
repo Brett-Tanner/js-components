@@ -15,7 +15,6 @@ nav.appendChild(
     {
       text: "One of Each",
       href: "",
-      toggleWidget: "hamburger",
     },
     false,
     { name: "slideDown", individual: false, duration: 300, easing: "ease-out" },
@@ -38,7 +37,6 @@ nav.appendChild(
     {
       text: "All Links",
       href: "",
-      toggleWidget: "hamburger",
     },
     true,
     { name: "slideRight", individual: false, duration: 300, easing: "ease-in" },
@@ -71,7 +69,6 @@ nav.appendChild(
     {
       text: "All Buttons",
       href: "",
-      toggleWidget: "hamburger",
     },
     false,
     {
@@ -99,7 +96,6 @@ nav.appendChild(
     {
       text: "All Text",
       href: "",
-      toggleWidget: "hamburger",
     },
     true,
     {
