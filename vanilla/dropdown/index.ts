@@ -48,17 +48,18 @@ nav.appendChild(
       { text: "Just text", elementType: "a" },
     ],
     {
-      containerClasses: ["grow"],
+      containerClasses: ["grow", "group"],
       dropdownClasses: ["p-3"],
       headingClasses: [
         ...headingClasses,
         "relative",
         "after:absolute",
-        "after:ml-1",
+        "after:ml-3",
         "after:content-['▼']",
-        "hover:after:rotate-180",
+        "group-hover:after:-rotate-90",
         "after:transition-all",
-        "after:duration-500",
+        "after:duration-300",
+        "after:ease-in",
       ],
       itemClasses: [...itemClasses],
     }
@@ -73,14 +74,19 @@ nav.appendChild(
       toggleWidget: "hamburger",
     },
     false,
-    { name: "expandDown", individual: false, duration: 300, easing: "ease-in" },
+    {
+      name: "expandDown",
+      individual: false,
+      duration: 400,
+      easing: "ease-out",
+    },
     [
       { text: "Button 1", elementType: "button" },
       { text: "Button 2", elementType: "button" },
       { text: "Button 3", elementType: "button" },
     ],
     {
-      containerClasses: ["grow"],
+      containerClasses: ["grow", "group"],
       dropdownClasses: ["p-3", "origin-top"],
       headingClasses: [...headingClasses],
       itemClasses: [...itemClasses],
@@ -108,9 +114,20 @@ nav.appendChild(
       { text: "Just text", elementType: "p" },
     ],
     {
-      containerClasses: ["grow"],
+      containerClasses: ["grow", "group"],
       dropdownClasses: ["p-3"],
-      headingClasses: [...headingClasses],
+      headingClasses: [
+        ...headingClasses,
+        "relative",
+        "before:absolute",
+        "before:left-6",
+        "before:content-['＋']",
+        "group-hover:before:rotate-180",
+        "group-hover:before:opacity-0",
+        "before:transition-all",
+        "before:duration-300",
+        "before:ease-in",
+      ],
       itemClasses: [...itemClasses, "origin-left"],
     }
   )

@@ -15,8 +15,8 @@ export const animations: animationList = {
     { opacity: 1, transform: "scaleY(1)" },
   ],
   expandRight: [
-    { opacity: 0, transform: "scaleX(0.3)" },
-    { opacity: 0, transform: "scaleX(0.3)" },
+    { opacity: 1, transform: "scaleX(0)" },
+    { opacity: 1, transform: "scaleX(0)" },
     { opacity: 1, transform: "scaleX(1)" },
   ],
 };
