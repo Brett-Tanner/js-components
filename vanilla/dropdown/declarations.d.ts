@@ -19,12 +19,10 @@ interface dropdownComponentClasses {
 interface titleInfo {
   text: string;
   href: string;
-  toggleWidget: toggleWidget;
+  toggleWidget: string;
 }
 
 interface itemInfo {
   text: string;
   elementType: "a" | "button" | "p";
 }
-
-type toggleWidget = "hamburger" | "plus" | "triangle";

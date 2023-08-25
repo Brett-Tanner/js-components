@@ -50,7 +50,16 @@ nav.appendChild(
     {
       containerClasses: ["grow"],
       dropdownClasses: ["p-3"],
-      headingClasses: [...headingClasses],
+      headingClasses: [
+        ...headingClasses,
+        "relative",
+        "after:absolute",
+        "after:ml-1",
+        "after:content-['▼']",
+        "hover:after:rotate-180",
+        "after:transition-all",
+        "after:duration-500",
+      ],
       itemClasses: [...itemClasses],
     }
   )
