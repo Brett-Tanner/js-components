@@ -4,7 +4,7 @@
 function rudder() {
   const menu = document.createElement("ul");
 
-  return { menu };
+  return menu;
 }
 
 export { rudder };

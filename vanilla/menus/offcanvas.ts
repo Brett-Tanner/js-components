@@ -3,7 +3,7 @@
 function offcanvas() {
   const menu = document.createElement("ul");
 
-  return { menu };
+  return menu;
 }
 
 export { offcanvas };

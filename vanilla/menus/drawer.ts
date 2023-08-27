@@ -3,7 +3,7 @@
 function drawer() {
   const menu = document.createElement("ul");
 
-  return { menu };
+  return menu;
 }
 
 export { drawer };

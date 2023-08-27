@@ -1,12 +1,17 @@
 interface buttonInfo {
   action: string | CallableFunction;
-  classes: string[];
+  buttonClasses?: string[];
   imageSrc: string;
   text: string;
+  textClasses?: string[];
 }
 
 interface classes {
-  buttons: string[];
-  container: string[];
+  backdrop?: string[];
+  buttons?: string[];
+  menu?: string[];
+  text?: string[];
   toggleButton: string[];
 }
+
+type expandDirection = "up" | "down" | "left" | "right";

@@ -7,86 +7,89 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-function bubble(buttons, classes) {
+import * as animations from "./bubbleAnimations.js";
+function bubble(buttonInfo, classes) {
     const menu = document.createElement("ul");
-    const expandToggle = toggle(classes.toggleButton);
-    menu.appendChild(expandToggle);
-    menu.classList.add(...classes.container);
+    const backdrop = classes.backdrop
+        ? menu.appendChild(createBackdrop(classes.backdrop))
+        : menu.appendChild(createBackdrop());
+    const renderedItems = buttonInfo.map((info) => {
+        return createButton(menu, info, classes.buttons);
+    });
+    menu.appendChild(toggle(renderedItems, backdrop, classes.toggleButton));
+    menu.classList.add("fixed", "bottom-5", "right-5", "flex", "flex-col", "gap-3");
+    if (classes.menu)
+        menu.classList.add(...classes.menu);
     return menu;
 }
-function animateX(toggleButton, lines) {
+const hiddenClasses = ["hidden", "opacity-0"];
+function collapse(toggleButton, menuItems, backdrop, lines) {
+    toggleButton.ariaExpanded = "false";
+    animations.animateHamburger(lines);
+    menuItems.forEach((item) => {
+        animations.fadeOut(item, menuItems.indexOf(item), menuItems.length, hiddenClasses);
+    });
+    animations.backdropAnimation(backdrop, "collapse");
+}
+function createBackdrop(classes) {
+    const backdrop = document.createElement("div");
+    backdrop.classList.add("absolute", "bottom-[-5vh]", "right-[-5vh]", "rounded-full", "h-[1vw]", "w-[1vw]", "transition-all", "z-30", "hidden");
+    if (classes)
+        backdrop.classList.add(...classes);
+    return backdrop;
+}
+function createButton(menu, info, buttonClasses, textClasses) {
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    button.classList.add("rounded-full");
+    if (buttonClasses)
+        button.classList.add(...buttonClasses);
+    if (info.buttonClasses)
+        button.classList.add(...info.buttonClasses);
+    const text = document.createElement("p");
+    text.innerText = info.text;
+    if (textClasses)
+        text.classList.add(...textClasses);
+    if (info.textClasses)
+        text.classList.add(...info.textClasses);
+    item.append(text, button);
+    item.classList.add("relative", "flex", "justify-end", "items-center", "gap-3", "p-[1vh]", "origin-right", "z-50", ...hiddenClasses);
+    menu.appendChild(item);
+    return item;
+}
+function expand(toggleButton, menuItems, backdrop, lines) {
     return __awaiter(this, void 0, void 0, function* () {
         toggleButton.ariaExpanded = "true";
-        const lineAnimations = [
-            lines[0].animate([
-                { transform: "translateY(0) rotate(0)" },
-                { transform: "translateY(5px) rotate(0)" },
-                { transform: "translateY(5px) rotate(45deg)" },
-            ], { duration: 300, fill: "forwards" }),
-            lines[1].animate([{ opacity: 0 }], { duration: 300, fill: "forwards" }),
-            lines[2].animate([
-                { transform: "translateY(0) rotate(0)" },
-                { transform: "translateY(-5px) rotate(0)" },
-                { transform: "translateY(-5px) rotate(-45deg)" },
-            ], { duration: 300, fill: "forwards" }),
-        ];
-        yield Promise.all([
-            lineAnimations[0].finished,
-            lineAnimations[1].finished,
-            lineAnimations[2].finished,
-        ]);
-        lineAnimations.forEach((animation) => {
-            animation.commitStyles();
-        });
-    });
-}
-function animateHamburger(toggleButton, lines) {
-    return __awaiter(this, void 0, void 0, function* () {
-        toggleButton.ariaExpanded = "false";
-        const lineAnimations = [
-            lines[0].animate([
-                { transform: "translateY(5px) rotate(45deg)" },
-                { transform: "translateY(5px) rotate(0)" },
-                { transform: "translateY(0) rotate(0)" },
-            ], { duration: 300, fill: "forwards" }),
-            lines[1].animate([{ opacity: 1 }], { duration: 300, fill: "forwards" }),
-            lines[2].animate([
-                { transform: "translateY(-5px) rotate(-45deg)" },
-                { transform: "translateY(-5px) rotate(0)" },
-                { transform: "translateY(0) rotate(0)" },
-            ], { duration: 300, fill: "forwards" }),
-        ];
-        yield Promise.all([
-            lineAnimations[0].finished,
-            lineAnimations[1].finished,
-            lineAnimations[2].finished,
-        ]);
-        lineAnimations.forEach((animation) => {
-            animation.commitStyles();
+        animations.animateX(lines);
+        menuItems.forEach((item) => {
+            item.classList.remove(...hiddenClasses);
+            animations.fadeIn(item, menuItems.indexOf(item), menuItems.length);
+            animations.backdropAnimation(backdrop, "expand");
         });
     });
 }
 function line() {
     const line = document.createElement("hr");
-    line.classList.add("border", "w-1/2");
+    line.classList.add("border", "w-1/2", "origin-center");
     return line;
 }
-function toggle(classes) {
+function toggle(menuItems, backdrop, classes) {
     const toggleContainer = document.createElement("li");
     const toggleButton = document.createElement("button");
     toggleButton.ariaExpanded = "false";
     const lines = [line(), line(), line()];
     toggleButton.append(...lines);
-    toggleButton.classList.add("bg-cyan-600", "flex", "flex-col", "justify-center", "items-center", "gap-1", ...classes);
+    toggleButton.classList.add("rounded-full", "flex", "flex-col", "justify-center", "items-center", "gap-[1vh]", "z-40", ...classes);
     toggleButton.addEventListener("click", () => {
         if (toggleButton.ariaExpanded === "false") {
-            animateX(toggleButton, lines);
+            expand(toggleButton, menuItems, backdrop, lines);
         }
         else {
-            animateHamburger(toggleButton, lines);
+            collapse(toggleButton, menuItems, backdrop, lines);
         }
     });
     toggleContainer.appendChild(toggleButton);
+    toggleContainer.classList.add("flex", "justify-end");
     return toggleContainer;
 }
 export { bubble };

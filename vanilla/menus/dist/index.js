@@ -2,41 +2,55 @@ import { bubble } from "./bubble.js";
 import { drawer } from "./drawer.js";
 import { offcanvas } from "./offcanvas.js";
 import { rudder } from "./rudder.js";
-const addBubbleMenus = () => {
+const placeholder = document.createElement("article");
+placeholder.innerText =
+    "Hello! Yes, it is I, the bumble placeholder. Pleased to make your acquaintance sir/madam! My purpose in life is to demonstrate the opacity, or lack thereof, of the menu which shall expand upon your kind person taking such action as is necessary. Am I happy with my purpose in life? Why of course, who could ask for more than to be a meaningless block of text suspended in the middle of nowhere, waiting to be covered by something more important. Sarcasm? Never heard of it.";
+placeholder.classList.add("text-3xl", "text-bold");
+const addBubbleMenu = () => {
     document.body.innerHTML = "";
-    const commonButtonClasses = [""];
-    const commonContainerClasses = ["fixed"];
-    const commonToggleButtonClasses = ["h-[8dvh]", "w-[8dvh]", "rounded-full"];
-    const bottomRight = bubble([{ action: "", classes: [""], imageSrc: "", text: "" }], {
-        buttons: [...commonButtonClasses],
-        container: [...commonContainerClasses, "bottom-3", "right-3"],
-        toggleButton: [...commonToggleButtonClasses],
-    });
-    const bottomLeft = bubble([{ action: "", classes: [""], imageSrc: "", text: "" }], {
-        buttons: [...commonButtonClasses],
-        container: [...commonContainerClasses, "bottom-3", "left-3"],
-        toggleButton: [...commonToggleButtonClasses],
-    });
-    const topLeft = bubble([{ action: "", classes: [""], imageSrc: "", text: "" }], {
-        buttons: [...commonButtonClasses],
-        container: [...commonContainerClasses, "top-3", "left-3"],
-        toggleButton: [...commonToggleButtonClasses],
-    });
-    const topRight = bubble([{ action: "", classes: [""], imageSrc: "", text: "" }], {
-        buttons: [...commonButtonClasses],
-        container: [...commonContainerClasses, "top-3", "right-3"],
-        toggleButton: [...commonToggleButtonClasses],
-    });
-    document.body.append(bottomRight, bottomLeft, topLeft, topRight);
+    document.body.appendChild(placeholder);
+    document.body.classList.add("w-screen", "h-screen", "flex", "justify-center", "items-center");
+    document.body.appendChild(bubble([
+        {
+            action: addDrawerMenu,
+            imageSrc: "",
+            buttonClasses: ["bg-emerald-500"],
+            text: "Switch to Drawer Menu",
+        },
+        {
+            action: addOffcanvasMenu,
+            imageSrc: "",
+            text: "Switch to Offcanvas Menu",
+        },
+        {
+            action: addRudderMenu,
+            imageSrc: "",
+            buttonClasses: ["bg-orange-500"],
+            text: "Switch to Rudder Menu",
+        },
+    ], {
+        backdrop: ["bg-cyan-400/70", "backdrop-blur"],
+        buttons: ["bg-cyan-500", "h-[5dvh]", "w-[5dvh]"],
+        toggleButton: ["h-[7dvh]", "w-[7dvh]", "bg-cyan-600"],
+    }));
 };
-const drawerMenu = drawer();
-const offcanvasMenu = offcanvas();
-const rudderMenu = rudder();
-const menuFunctions = {
-    bubble: addBubbleMenus,
-    drawer: drawerMenu,
-    offcanvas: offcanvasMenu,
-    rudder: rudderMenu,
+const addDrawerMenu = function () {
+    document.body.innerHTML = "";
+    document.body.appendChild(placeholder);
+    document.body.classList.add("w-screen", "h-screen", "flex", "justify-center", "items-center");
+    document.body.appendChild(drawer());
 };
-addBubbleMenus();
+const addOffcanvasMenu = function () {
+    document.body.innerHTML = "";
+    document.body.appendChild(placeholder);
+    document.body.classList.add("w-screen", "h-screen", "flex", "justify-center", "items-center");
+    document.body.appendChild(offcanvas());
+};
+const addRudderMenu = function () {
+    document.body.innerHTML = "";
+    document.body.appendChild(placeholder);
+    document.body.classList.add("w-screen", "h-screen", "flex", "justify-center", "items-center");
+    document.body.appendChild(rudder());
+};
+addBubbleMenu();
 //# sourceMappingURL=index.js.map
