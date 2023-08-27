@@ -39,6 +39,7 @@ function dropdown(
   return container;
 }
 
+// TODO: must be some way to modularize this more
 function addHoverListeners(
   container: HTMLUListElement,
   dropdownMenu: HTMLUListElement,
@@ -48,9 +49,14 @@ function addHoverListeners(
   if (animationInfo.individual) {
     // When hovered, hide ALL dropdown items then reveal children
     container.addEventListener("mouseenter", () => {
-      document.querySelectorAll(".dropdownItem").forEach((item) => {
-        item.classList.add(...hiddenClasses);
-      });
+      [...document.querySelectorAll(".dropdownItem")]
+        .filter(
+          (item) =>
+            item instanceof HTMLLIElement && renderedItems.indexOf(item) === -1
+        )
+        .forEach((item) => {
+          item.classList.add(...hiddenClasses);
+        });
       renderedItems.forEach((item) => {
         item.classList.remove(...hiddenClasses);
         const keyframes = animations[animationInfo.name];
@@ -89,6 +95,14 @@ function addHoverListeners(
     });
   } else {
     container.addEventListener("mouseenter", () => {
+      [...document.querySelectorAll(".dropdownItem")]
+        .filter(
+          (item) =>
+            item instanceof HTMLLIElement && renderedItems.indexOf(item) === -1
+        )
+        .forEach((item) => {
+          item.classList.add(...hiddenClasses);
+        });
       dropdownMenu.animate(animations[animationInfo.name], {
         duration: animationInfo.duration,
         iterations: 1,

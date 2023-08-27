@@ -24,7 +24,9 @@ function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
 function addHoverListeners(container, dropdownMenu, renderedItems, animationInfo) {
     if (animationInfo.individual) {
         container.addEventListener("mouseenter", () => {
-            document.querySelectorAll(".dropdownItem").forEach((item) => {
+            [...document.querySelectorAll(".dropdownItem")]
+                .filter((item) => item instanceof HTMLLIElement && renderedItems.indexOf(item) === -1)
+                .forEach((item) => {
                 item.classList.add(...hiddenClasses);
             });
             renderedItems.forEach((item) => {
@@ -55,6 +57,11 @@ function addHoverListeners(container, dropdownMenu, renderedItems, animationInfo
     }
     else {
         container.addEventListener("mouseenter", () => {
+            [...document.querySelectorAll(".dropdownItem")]
+                .filter((item) => item instanceof HTMLLIElement && renderedItems.indexOf(item) === -1)
+                .forEach((item) => {
+                item.classList.add(...hiddenClasses);
+            });
             dropdownMenu.animate(animations[animationInfo.name], {
                 duration: animationInfo.duration,
                 iterations: 1,
