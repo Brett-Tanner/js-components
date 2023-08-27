@@ -1,4 +1,4 @@
-export const animations: animationList = {
+const animations: animationList = {
   slideDown: [
     { opacity: 0, transform: "translateY(-10px)" },
     { opacity: 0, transform: "translateY(-10px)" },
@@ -21,7 +21,7 @@ export const animations: animationList = {
   ],
 };
 
-export function addOffset(
+function addOffset(
   keyframes: Keyframe[],
   index: number,
   staggerTime: number,
@@ -29,3 +29,5 @@ export function addOffset(
 ) {
   keyframes[1].offset = (index * staggerTime) / duration;
 }
+
+export { addOffset, animations };

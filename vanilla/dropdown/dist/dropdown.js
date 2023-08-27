@@ -1,4 +1,4 @@
-import { animations, addOffset } from "./animations.js";
+import { addOffset, animations } from "./animations.js";
 const hiddenClasses = ["hidden", "opacity-0"];
 function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
     const container = document.createElement("ul");
@@ -114,12 +114,8 @@ function addClickListeners(container, dropdownMenu, titleItem, renderedItems, an
                 }
             });
         });
-        document.addEventListener("click", (e) => {
-            if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
-                renderedItems.forEach((item) => {
-                    reverseAnimation(item, animationInfo);
-                });
-            }
+        window.addEventListener("click", (e) => {
+            autoClose(e, container, renderedItems);
         });
     }
     else {
@@ -148,12 +144,15 @@ function addClickListeners(container, dropdownMenu, titleItem, renderedItems, an
                 });
             }
         });
-        document.addEventListener("click", (e) => {
-            if ((e.target instanceof HTMLLIElement ||
-                e.target instanceof HTMLUListElement) &&
-                !container.contains(e.target)) {
-                reverseAnimation(dropdownMenu, animationInfo);
-            }
+        window.addEventListener("click", (e) => {
+            autoClose(e, container, renderedItems);
+        });
+    }
+}
+function autoClose(e, container, renderedItems) {
+    if (e.target instanceof Node && !container.contains(e.target)) {
+        renderedItems.forEach((item) => {
+            item.classList.add(...hiddenClasses);
         });
     }
 }
@@ -175,16 +174,6 @@ function listItem(item, classes) {
     li.classList.add(...classes, ...hiddenClasses, "z-10", "dropdownItem");
     li.appendChild(element);
     return li;
-}
-function reverseAnimation(item, animationInfo) {
-    const animation = item.animate(animations[animationInfo.name], {
-        duration: animationInfo.duration,
-        iterations: 1,
-    });
-    animation.reverse();
-    animation.addEventListener("finish", () => {
-        item.classList.add(...hiddenClasses);
-    });
 }
 export { dropdown };
 //# sourceMappingURL=dropdown.js.map

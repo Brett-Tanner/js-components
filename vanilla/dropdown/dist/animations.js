@@ -1,4 +1,4 @@
-export const animations = {
+const animations = {
     slideDown: [
         { opacity: 0, transform: "translateY(-10px)" },
         { opacity: 0, transform: "translateY(-10px)" },
@@ -20,7 +20,8 @@ export const animations = {
         { opacity: 1, transform: "scaleX(1)" },
     ],
 };
-export function addOffset(keyframes, index, staggerTime, duration) {
+function addOffset(keyframes, index, staggerTime, duration) {
     keyframes[1].offset = (index * staggerTime) / duration;
 }
+export { addOffset, animations };
 //# sourceMappingURL=animations.js.map

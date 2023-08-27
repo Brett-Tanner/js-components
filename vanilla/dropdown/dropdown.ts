@@ -1,4 +1,4 @@
-import { animations, addOffset } from "./animations.js";
+import { addOffset, animations } from "./animations.js";
 
 const hiddenClasses = ["hidden", "opacity-0"];
 
@@ -47,7 +47,7 @@ function addHoverListeners(
   animationInfo: animationInfo
 ) {
   if (animationInfo.individual) {
-    // When hovered, hide ALL dropdown items then reveal children
+    // When hovered, hide all dropdown items not in container
     container.addEventListener("mouseenter", () => {
       [...document.querySelectorAll(".dropdownItem")]
         .filter(
@@ -175,12 +175,8 @@ function addClickListeners(
       });
     });
     // Automatically close the dropdown when user clicks outside it
-    document.addEventListener("click", (e) => {
-      if (e.target instanceof HTMLLIElement && !container.contains(e.target)) {
-        renderedItems.forEach((item) => {
-          reverseAnimation(item, animationInfo);
-        });
-      }
+    window.addEventListener("click", (e) => {
+      autoClose(e, container, renderedItems);
     });
   } else {
     titleItem.addEventListener("click", (e) => {
@@ -209,14 +205,20 @@ function addClickListeners(
       }
     });
     // Automatically close the dropdown when user clicks outside it
-    document.addEventListener("click", (e) => {
-      if (
-        (e.target instanceof HTMLLIElement ||
-          e.target instanceof HTMLUListElement) &&
-        !container.contains(e.target)
-      ) {
-        reverseAnimation(dropdownMenu, animationInfo);
-      }
+    window.addEventListener("click", (e) => {
+      autoClose(e, container, renderedItems);
+    });
+  }
+}
+
+function autoClose(
+  e: Event,
+  container: HTMLUListElement,
+  renderedItems: HTMLLIElement[]
+) {
+  if (e.target instanceof Node && !container.contains(e.target)) {
+    renderedItems.forEach((item) => {
+      item.classList.add(...hiddenClasses);
     });
   }
 }
@@ -243,20 +245,6 @@ function listItem(item: itemInfo, classes: string[]) {
   li.appendChild(element);
 
   return li;
-}
-
-function reverseAnimation(
-  item: HTMLLIElement | HTMLUListElement,
-  animationInfo: animationInfo
-) {
-  const animation = item.animate(animations[animationInfo.name], {
-    duration: animationInfo.duration,
-    iterations: 1,
-  });
-  animation.reverse();
-  animation.addEventListener("finish", () => {
-    item.classList.add(...hiddenClasses);
-  });
 }
 
 export { dropdown };
