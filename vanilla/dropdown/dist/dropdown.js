@@ -1,4 +1,4 @@
-import { addOffset, animations } from "./animations.js";
+import { animateForward, animateReverse } from "./animations.js";
 const hiddenClasses = ["hidden", "opacity-0"];
 function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
     const container = document.createElement("ul");
@@ -8,11 +8,11 @@ function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
         dropdownMenu.appendChild(renderedItem);
         return renderedItem;
     });
-    dropdownMenu.classList.add("absolute", "w-full", ...classes.dropdownClasses);
+    dropdownMenu.classList.add("w-full", ...classes.dropdownClasses, "absolute");
     container.appendChild(dropdownMenu);
     const titleItem = heading(titleInfo, classes.headingClasses);
     if (hoverable) {
-        addHoverListeners(container, dropdownMenu, renderedItems, animationInfo);
+        addHoverListeners(container, dropdownMenu, titleItem, renderedItems, animationInfo);
     }
     else {
         addClickListeners(container, dropdownMenu, titleItem, renderedItems, animationInfo);
@@ -21,136 +21,34 @@ function dropdown(titleInfo, hoverable, animationInfo, items, classes) {
     container.classList.add(...classes.containerClasses, "relative");
     return container;
 }
-function addHoverListeners(container, dropdownMenu, renderedItems, animationInfo) {
-    if (animationInfo.individual) {
-        container.addEventListener("mouseenter", () => {
-            [...document.querySelectorAll(".dropdownItem")]
-                .filter((item) => item instanceof HTMLLIElement && renderedItems.indexOf(item) === -1)
-                .forEach((item) => {
-                item.classList.add(...hiddenClasses);
-            });
-            renderedItems.forEach((item) => {
-                item.classList.remove(...hiddenClasses);
-                const keyframes = animations[animationInfo.name];
-                addOffset(keyframes, renderedItems.indexOf(item), animationInfo.duration / renderedItems.length, animationInfo.duration);
-                item.animate(keyframes, {
-                    duration: animationInfo.duration,
-                    iterations: 1,
-                    easing: animationInfo.easing,
-                });
-            });
-        });
-        container.addEventListener("mouseleave", () => {
-            renderedItems.forEach((item) => {
-                const keyframes = animations[animationInfo.name];
-                addOffset(keyframes, renderedItems.indexOf(item), animationInfo.duration / renderedItems.length, animationInfo.duration);
-                const animation = item.animate(keyframes, {
-                    duration: animationInfo.duration,
-                    iterations: 1,
-                });
-                animation.reverse();
-                animation.addEventListener("finish", () => {
-                    item.classList.add(...hiddenClasses);
-                });
-            });
-        });
-    }
-    else {
-        container.addEventListener("mouseenter", () => {
-            [...document.querySelectorAll(".dropdownItem")]
-                .filter((item) => item instanceof HTMLLIElement && renderedItems.indexOf(item) === -1)
-                .forEach((item) => {
-                item.classList.add(...hiddenClasses);
-            });
-            dropdownMenu.animate(animations[animationInfo.name], {
-                duration: animationInfo.duration,
-                iterations: 1,
-                easing: animationInfo.easing,
-            });
-            renderedItems.forEach((item) => {
-                item.classList.remove(...hiddenClasses);
-            });
-        });
-        container.addEventListener("mouseleave", () => {
-            const animation = dropdownMenu.animate(animations[animationInfo.name], {
-                duration: animationInfo.duration,
-                iterations: 1,
-            });
-            animation.reverse();
-            renderedItems.forEach((item) => {
-                animation.addEventListener("finish", () => {
-                    item.classList.add(...hiddenClasses);
-                });
-            });
-        });
-    }
+function addHoverListeners(container, dropdownMenu, titleItem, renderedItems, animationInfo) {
+    container.addEventListener("mouseenter", () => {
+        hideOtherDropdowns(container);
+        animateForward(animationInfo, dropdownMenu, renderedItems, hiddenClasses);
+    });
+    container.addEventListener("mouseleave", () => {
+        animateReverse(animationInfo, dropdownMenu, renderedItems, hiddenClasses);
+    });
 }
 function addClickListeners(container, dropdownMenu, titleItem, renderedItems, animationInfo) {
-    if (animationInfo.individual) {
-        titleItem.addEventListener("click", (e) => {
-            e.preventDefault();
-            renderedItems.forEach((item) => {
-                if (item.classList.contains("hidden")) {
-                    item.classList.remove(...hiddenClasses);
-                    const keyframes = animations[animationInfo.name];
-                    addOffset(keyframes, renderedItems.indexOf(item), animationInfo.duration / renderedItems.length, animationInfo.duration);
-                    item.animate(keyframes, {
-                        duration: animationInfo.duration,
-                        iterations: 1,
-                        easing: animationInfo.easing,
-                    });
-                }
-                else {
-                    const keyframes = animations[animationInfo.name];
-                    addOffset(keyframes, renderedItems.indexOf(item), animationInfo.duration / renderedItems.length, animationInfo.duration);
-                    const animation = item.animate(keyframes, {
-                        duration: animationInfo.duration,
-                        iterations: 1,
-                    });
-                    animation.reverse();
-                    animation.addEventListener("finish", () => {
-                        item.classList.add(...hiddenClasses);
-                    });
-                }
-            });
-        });
-        window.addEventListener("click", (e) => {
-            autoClose(e, container, renderedItems);
-        });
-    }
-    else {
-        titleItem.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (renderedItems[0].classList.contains("hidden")) {
-                dropdownMenu.animate(animations[animationInfo.name], {
-                    duration: animationInfo.duration,
-                    iterations: 1,
-                    easing: animationInfo.easing,
-                });
-                renderedItems.forEach((item) => {
-                    item.classList.remove(...hiddenClasses);
-                });
-            }
-            else {
-                const animation = dropdownMenu.animate(animations[animationInfo.name], {
-                    duration: animationInfo.duration,
-                    iterations: 1,
-                });
-                animation.reverse();
-                animation.addEventListener("finish", () => {
-                    renderedItems.forEach((item) => {
-                        item.classList.add(...hiddenClasses);
-                    });
-                });
-            }
-        });
-        window.addEventListener("click", (e) => {
-            autoClose(e, container, renderedItems);
-        });
-    }
+    titleItem.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (titleItem.ariaExpanded == "false") {
+            titleItem.ariaExpanded = "true";
+            animateForward(animationInfo, dropdownMenu, renderedItems, hiddenClasses);
+        }
+        else {
+            titleItem.ariaExpanded = "false";
+            animateReverse(animationInfo, dropdownMenu, renderedItems, hiddenClasses);
+        }
+    });
+    window.addEventListener("click", (e) => {
+        autoClose(e, container, titleItem, renderedItems);
+    });
 }
-function autoClose(e, container, renderedItems) {
+function autoClose(e, container, titleItem, renderedItems) {
     if (e.target instanceof Node && !container.contains(e.target)) {
+        titleItem.ariaExpanded = "false";
         renderedItems.forEach((item) => {
             item.classList.add(...hiddenClasses);
         });
@@ -161,9 +59,22 @@ function heading(titleInfo, classes) {
     const heading = document.createElement("a");
     heading.href = titleInfo.href;
     heading.innerText = titleInfo.text;
-    titleItem.classList.add(...classes);
+    titleItem.ariaExpanded = "false";
+    titleItem.classList.add(...classes, "dropdownTitle");
     titleItem.appendChild(heading);
     return titleItem;
+}
+function hideOtherDropdowns(container) {
+    [...document.querySelectorAll(".dropdownTitle")]
+        .filter((title) => title instanceof HTMLLIElement && !container.contains(title))
+        .forEach((title) => {
+        title.ariaExpanded = "false";
+    });
+    [...document.querySelectorAll(".dropdownItem")]
+        .filter((item) => item instanceof HTMLLIElement && !container.contains(item))
+        .forEach((item) => {
+        item.classList.add(...hiddenClasses);
+    });
 }
 function listItem(item, classes) {
     const li = document.createElement("li");

@@ -23,5 +23,56 @@ const animations = {
 function addOffset(keyframes, index, staggerTime, duration) {
     keyframes[1].offset = (index * staggerTime) / duration;
 }
-export { addOffset, animations };
+function animateForward(animationInfo, dropdownMenu, dropdownItems, hiddenClasses) {
+    dropdownItems.forEach((item) => {
+        item.classList.remove(...hiddenClasses);
+    });
+    if (animationInfo.individual) {
+        dropdownItems.forEach((item) => {
+            const keyframes = animations[animationInfo.name];
+            addOffset(keyframes, dropdownItems.indexOf(item), animationInfo.duration / dropdownItems.length, animationInfo.duration);
+            item.animate(keyframes, {
+                duration: animationInfo.duration,
+                iterations: 1,
+                easing: animationInfo.easing,
+            });
+        });
+    }
+    else {
+        dropdownMenu.animate(animations[animationInfo.name], {
+            duration: animationInfo.duration,
+            iterations: 1,
+            easing: animationInfo.easing,
+        });
+    }
+}
+function animateReverse(animationInfo, dropdownMenu, dropdownItems, hiddenClasses) {
+    if (animationInfo.individual) {
+        dropdownItems.forEach((item) => {
+            const keyframes = animations[animationInfo.name];
+            addOffset(keyframes, dropdownItems.indexOf(item), animationInfo.duration / dropdownItems.length, animationInfo.duration);
+            const animation = item.animate(keyframes, {
+                duration: animationInfo.duration,
+                iterations: 1,
+            });
+            animation.reverse();
+            animation.addEventListener("finish", () => {
+                item.classList.add(...hiddenClasses);
+            });
+        });
+    }
+    else {
+        const animation = dropdownMenu.animate(animations[animationInfo.name], {
+            duration: animationInfo.duration,
+            iterations: 1,
+        });
+        animation.reverse();
+        dropdownItems.forEach((item) => {
+            animation.addEventListener("finish", () => {
+                item.classList.add(...hiddenClasses);
+            });
+        });
+    }
+}
+export { animateForward, animateReverse };
 //# sourceMappingURL=animations.js.map
