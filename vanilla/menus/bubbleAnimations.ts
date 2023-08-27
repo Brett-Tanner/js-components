@@ -35,8 +35,8 @@ async function animateX(lines: HTMLHRElement[]) {
     lines[0].animate(
       [
         { transform: "translateY(0) rotate(0)" },
-        { transform: "translateY(1vh) rotate(0)" },
-        { transform: "translateY(1vh) rotate(45deg)" },
+        { transform: "translateY(1.3vh) rotate(0)" },
+        { transform: "translateY(1.3vh) rotate(45deg)" },
       ],
       { duration: 300, fill: "forwards" }
     ),
@@ -44,8 +44,8 @@ async function animateX(lines: HTMLHRElement[]) {
     lines[2].animate(
       [
         { transform: "translateY(0) rotate(0)" },
-        { transform: "translateY(-1vh) rotate(0)" },
-        { transform: "translateY(-1vh) rotate(-45deg)" },
+        { transform: "translateY(-1.3vh) rotate(0)" },
+        { transform: "translateY(-1.3vh) rotate(-45deg)" },
       ],
       { duration: 300, fill: "forwards" }
     ),
@@ -73,10 +73,10 @@ function backdropAnimation(
 
   if (direction === "expand") {
     backdrop.classList.remove("hidden");
-    backdrop.animate(frames, { duration: 300, fill: "forwards" });
+    backdrop.animate(frames, { duration: 500, fill: "forwards" });
   } else {
     const animation = backdrop.animate(frames, {
-      duration: 300,
+      duration: 500,
       fill: "forwards",
     });
     animation.reverse();

@@ -16,27 +16,32 @@ const addBubbleMenu = () => {
     "h-screen",
     "flex",
     "justify-center",
-    "items-center"
+    "items-center",
+    "overflow-hidden"
   );
   document.body.appendChild(
     bubble(
       [
         {
           action: addDrawerMenu,
-          imageSrc: "",
+          imageSrc: "./images/arrow-down-right.svg",
           buttonClasses: ["bg-emerald-500"],
           text: "Switch to Drawer Menu",
+          textClasses: ["bg-emerald-500", "text-zinc-50"],
         },
         {
           action: addOffcanvasMenu,
           imageSrc: "",
+          buttonClasses: ["bg-yellow-400"],
           text: "Switch to Offcanvas Menu",
+          textClasses: ["bg-yellow-400"],
         },
         {
           action: addRudderMenu,
           imageSrc: "",
           buttonClasses: ["bg-orange-500"],
           text: "Switch to Rudder Menu",
+          textClasses: ["bg-orange-500", "text-zinc-50"],
         },
       ],
       {
@@ -49,7 +54,7 @@ const addBubbleMenu = () => {
 };
 
 const addDrawerMenu = function () {
-  document.body.innerHTML = "";
+  document.body.innerHTML = "drawer";
   document.body.appendChild(placeholder);
   document.body.classList.add(
     "w-screen",
@@ -61,7 +66,7 @@ const addDrawerMenu = function () {
   document.body.appendChild(drawer());
 };
 const addOffcanvasMenu = function () {
-  document.body.innerHTML = "";
+  document.body.innerHTML = "offcanvas";
   document.body.appendChild(placeholder);
   document.body.classList.add(
     "w-screen",
@@ -73,7 +78,7 @@ const addOffcanvasMenu = function () {
   document.body.appendChild(offcanvas());
 };
 const addRudderMenu = function () {
-  document.body.innerHTML = "";
+  document.body.innerHTML = "rudder";
   document.body.appendChild(placeholder);
   document.body.classList.add(
     "w-screen",

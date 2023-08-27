@@ -11,8 +11,8 @@ import * as animations from "./bubbleAnimations.js";
 function bubble(buttonInfo, classes) {
     const menu = document.createElement("ul");
     const backdrop = classes.backdrop
-        ? menu.appendChild(createBackdrop(classes.backdrop))
-        : menu.appendChild(createBackdrop());
+        ? document.body.appendChild(createBackdrop(classes.backdrop))
+        : document.body.appendChild(createBackdrop());
     const renderedItems = buttonInfo.map((info) => {
         return createButton(menu, info, classes.buttons);
     });
@@ -33,7 +33,7 @@ function collapse(toggleButton, menuItems, backdrop, lines) {
 }
 function createBackdrop(classes) {
     const backdrop = document.createElement("div");
-    backdrop.classList.add("absolute", "bottom-[-5vh]", "right-[-5vh]", "rounded-full", "h-[1vw]", "w-[1vw]", "transition-all", "z-30", "hidden");
+    backdrop.classList.add("fixed", "bottom-[0]", "right-[0]", "rounded-full", "h-[1vw]", "w-[1vw]", "transition-all", "hidden");
     if (classes)
         backdrop.classList.add(...classes);
     return backdrop;
@@ -48,12 +48,16 @@ function createButton(menu, info, buttonClasses, textClasses) {
         button.classList.add(...info.buttonClasses);
     const text = document.createElement("p");
     text.innerText = info.text;
+    text.classList.add("p-1", "rounded");
     if (textClasses)
         text.classList.add(...textClasses);
     if (info.textClasses)
         text.classList.add(...info.textClasses);
     item.append(text, button);
-    item.classList.add("relative", "flex", "justify-end", "items-center", "gap-3", "p-[1vh]", "origin-right", "z-50", ...hiddenClasses);
+    item.classList.add("flex", "justify-end", "items-center", "gap-3", "p-[1vh]", "origin-right", "hover:scale-110", "transition-all", ...hiddenClasses);
+    item.addEventListener("click", () => {
+        info.action();
+    });
     menu.appendChild(item);
     return item;
 }
@@ -70,7 +74,7 @@ function expand(toggleButton, menuItems, backdrop, lines) {
 }
 function line() {
     const line = document.createElement("hr");
-    line.classList.add("border", "w-1/2", "origin-center");
+    line.classList.add("border-[0.2vh]", "w-1/2", "origin-center");
     return line;
 }
 function toggle(menuItems, backdrop, classes) {
@@ -79,7 +83,7 @@ function toggle(menuItems, backdrop, classes) {
     toggleButton.ariaExpanded = "false";
     const lines = [line(), line(), line()];
     toggleButton.append(...lines);
-    toggleButton.classList.add("rounded-full", "flex", "flex-col", "justify-center", "items-center", "gap-[1vh]", "z-40", ...classes);
+    toggleButton.classList.add("rounded-full", "flex", "flex-col", "justify-center", "items-center", "gap-[1vh]", ...classes);
     toggleButton.addEventListener("click", () => {
         if (toggleButton.ariaExpanded === "false") {
             expand(toggleButton, menuItems, backdrop, lines);

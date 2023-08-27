@@ -1,5 +1,5 @@
 interface buttonInfo {
-  action: string | CallableFunction;
+  action: CallableFunction;
   buttonClasses?: string[];
   imageSrc: string;
   text: string;
