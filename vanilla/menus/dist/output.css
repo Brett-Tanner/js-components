@@ -727,6 +727,10 @@ video {
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
 }
 
+.stroke-2 {
+  stroke-width: 2;
+}
+
 .p-\[1vh\] {
   padding: 1vh;
 }
@@ -735,9 +739,21 @@ video {
   padding: 0.25rem;
 }
 
+.align-middle {
+  vertical-align: middle;
+}
+
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
 }
 
 .text-zinc-50 {

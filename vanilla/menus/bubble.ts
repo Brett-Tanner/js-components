@@ -71,7 +71,15 @@ function createButton(
   const item = document.createElement("li");
 
   const button = document.createElement("button");
-  button.classList.add("rounded-full");
+  const img = document.createElement("img");
+  img.src = info.imageSrc;
+  button.appendChild(img);
+  button.classList.add(
+    "rounded-full",
+    "flex",
+    "justify-center",
+    "items-center"
+  );
   if (buttonClasses) button.classList.add(...buttonClasses);
   if (info.buttonClasses) button.classList.add(...info.buttonClasses);
 
@@ -93,6 +101,7 @@ function createButton(
     "transition-all",
     ...hiddenClasses
   );
+
   item.addEventListener("click", () => {
     info.action();
   });

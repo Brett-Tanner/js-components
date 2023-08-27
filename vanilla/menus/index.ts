@@ -31,14 +31,14 @@ const addBubbleMenu = () => {
         },
         {
           action: addOffcanvasMenu,
-          imageSrc: "",
+          imageSrc: "./images/arrow-left-square.svg",
           buttonClasses: ["bg-yellow-400"],
           text: "Switch to Offcanvas Menu",
           textClasses: ["bg-yellow-400"],
         },
         {
           action: addRudderMenu,
-          imageSrc: "",
+          imageSrc: "./images/arrow-clockwise.svg",
           buttonClasses: ["bg-orange-500"],
           text: "Switch to Rudder Menu",
           textClasses: ["bg-orange-500", "text-zinc-50"],
