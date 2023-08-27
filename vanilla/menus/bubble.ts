@@ -110,7 +110,7 @@ function createButton(
   return item;
 }
 
-async function expand(
+function expand(
   toggleButton: HTMLButtonElement,
   menuItems: HTMLLIElement[],
   backdrop: HTMLDivElement,

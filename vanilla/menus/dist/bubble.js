@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import * as animations from "./bubbleAnimations.js";
 function bubble(buttonInfo, classes) {
     const menu = document.createElement("ul");
@@ -65,14 +56,12 @@ function createButton(menu, info, buttonClasses, textClasses) {
     return item;
 }
 function expand(toggleButton, menuItems, backdrop, lines) {
-    return __awaiter(this, void 0, void 0, function* () {
-        toggleButton.ariaExpanded = "true";
-        animations.animateX(lines);
-        menuItems.forEach((item) => {
-            item.classList.remove(...hiddenClasses);
-            animations.fadeIn(item, menuItems.indexOf(item), menuItems.length);
-            animations.backdropAnimation(backdrop, "expand");
-        });
+    toggleButton.ariaExpanded = "true";
+    animations.animateX(lines);
+    menuItems.forEach((item) => {
+        item.classList.remove(...hiddenClasses);
+        animations.fadeIn(item, menuItems.indexOf(item), menuItems.length);
+        animations.backdropAnimation(backdrop, "expand");
     });
 }
 function line() {
