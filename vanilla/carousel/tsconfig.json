@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
     "alwaysStrict": true,
     "removeComments": true,
     "sourceMap": true,
