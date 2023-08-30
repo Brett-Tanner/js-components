@@ -3,7 +3,7 @@ function carousel(imgSources, classes) {
     const container = document.createElement("div");
     const centerContainer = container.appendChild(createImageContainer("center"));
     centerContainer.appendChild(image(imgSources[0], false));
-    container.appendChild(skipBar(imgSources, classes.nav));
+    container.appendChild(skipBar(imgSources, classes.nav, centerContainer));
     addArrows(container, centerContainer, imgSources);
     window.addEventListener("keydown", (e) => {
         e.key === "ArrowRight"
@@ -50,13 +50,19 @@ function createImageContainer(role) {
     }
     return imgContainer;
 }
-function image(src, thumbnail) {
+function image(src, thumbnail, centerContainer) {
     const img = document.createElement("img");
     img.src = thumbnail ? src.replace(/images/g, "/images/thumbnails/") : src;
     img.classList.add("h-full", "w-auto");
     if (thumbnail) {
         img.width = 100;
         img.height = 100;
+        img.addEventListener("click", () => {
+            if (centerContainer === undefined)
+                throw new Error("Centre container must be specified for thumbnails");
+            centerContainer.innerHTML = "";
+            centerContainer.appendChild(image(src, false));
+        });
     }
     else {
         img.width = 1500;
@@ -85,10 +91,10 @@ function move(direction, imgContainer, imgSources) {
     imgContainer.innerHTML = "";
     imgContainer.appendChild(newImg);
 }
-function skipBar(imgSources, classes) {
+function skipBar(imgSources, classes, centerContainer) {
     const skipNav = document.createElement("nav");
     imgSources.forEach((src) => {
-        const thumbnail = image(src, true);
+        const thumbnail = image(src, true, centerContainer);
         const thumbContainer = createImageContainer("thumbnail");
         thumbContainer.appendChild(thumbnail);
         skipNav.appendChild(thumbContainer);
