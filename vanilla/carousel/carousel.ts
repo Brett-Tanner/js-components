@@ -1,10 +1,12 @@
-const currentImageIndex = 0;
+let currentImageIndex = 0;
 
 function carousel(imgSources: string[], classes: carouselStyles) {
   const container = document.createElement("div");
-  container.appendChild(image(imgSources[currentImageIndex], false));
+  const imgContainer = container.appendChild(
+    image(imgSources[currentImageIndex], false)
+  );
   container.appendChild(skipBar(imgSources, classes.nav));
-  addArrows(container);
+  addArrows(container, imgContainer, imgSources);
 
   container.classList.add(
     "h-screen",
@@ -19,9 +21,19 @@ function carousel(imgSources: string[], classes: carouselStyles) {
   return container;
 }
 
-function addArrows(container: HTMLDivElement) {
+function addArrows(
+  container: HTMLDivElement,
+  imgContainer: HTMLDivElement,
+  imgSources: string[]
+) {
   const leftArrow = createArrow("left");
+  leftArrow.addEventListener("click", () => {
+    move("left", imgContainer, imgSources);
+  });
   const rightArrow = createArrow("right");
+  rightArrow.addEventListener("click", () => {
+    move("right", imgContainer, imgSources);
+  });
 
   container.append(leftArrow, rightArrow);
 }
@@ -47,6 +59,8 @@ function image(src: string, thumbnail: boolean) {
   img.src = thumbnail ? src.replace(/images/g, "/images/thumbnails/") : src;
   img.classList.add("h-full", "w-auto");
 
+  console.log(img);
+
   if (thumbnail) {
     img.width = 100;
     img.height = 100;
@@ -65,6 +79,29 @@ function image(src: string, thumbnail: boolean) {
   imgContainer.appendChild(img);
 
   return imgContainer;
+}
+
+function move(
+  direction: "left" | "right",
+  imgContainer: HTMLDivElement,
+  imgSources: string[]
+) {
+  if (direction === "right") {
+    if (currentImageIndex + 1 > imgSources.length - 1) {
+      currentImageIndex = 0;
+    } else {
+      currentImageIndex++;
+    }
+  } else {
+    if (currentImageIndex - 1 < 0) {
+      currentImageIndex = imgSources.length - 1;
+    } else {
+      currentImageIndex--;
+    }
+  }
+  const newImg = image(imgSources[currentImageIndex], false);
+  imgContainer.innerHTML = "";
+  imgContainer.appendChild(newImg);
 }
 
 function skipBar(imgSources: string[], classes: string[] | undefined) {
