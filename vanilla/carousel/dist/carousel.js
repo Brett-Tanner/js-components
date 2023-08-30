@@ -1,9 +1,15 @@
 let currentImageIndex = 0;
 function carousel(imgSources, classes) {
     const container = document.createElement("div");
-    const imgContainer = container.appendChild(image(imgSources[currentImageIndex], false));
+    const centerContainer = container.appendChild(createImageContainer("center"));
+    centerContainer.appendChild(image(imgSources[0], false));
     container.appendChild(skipBar(imgSources, classes.nav));
-    addArrows(container, imgContainer, imgSources);
+    addArrows(container, centerContainer, imgSources);
+    window.addEventListener("keydown", (e) => {
+        e.key === "ArrowRight"
+            ? move("right", centerContainer, imgSources)
+            : move("left", centerContainer, imgSources);
+    });
     container.classList.add("h-screen", "flex", "flex-wrap", "items-center", "p-3", "gap-3", "bg-gray-700");
     if (classes.container)
         container.classList.add(...classes.container);
@@ -33,12 +39,21 @@ function createArrow(direction) {
     arrow.classList.add("text-slate-400", "text-7xl", "self-stretch");
     return arrow;
 }
-function image(src, thumbnail) {
+function createImageContainer(role) {
     const imgContainer = document.createElement("div");
+    switch (role) {
+        case "center":
+            imgContainer.classList.add("h-5/6", "grow", "basis-1/2", "flex", "justify-center", "items-center");
+            break;
+        default:
+            break;
+    }
+    return imgContainer;
+}
+function image(src, thumbnail) {
     const img = document.createElement("img");
     img.src = thumbnail ? src.replace(/images/g, "/images/thumbnails/") : src;
     img.classList.add("h-full", "w-auto");
-    console.log(img);
     if (thumbnail) {
         img.width = 100;
         img.height = 100;
@@ -46,10 +61,8 @@ function image(src, thumbnail) {
     else {
         img.width = 1500;
         img.height = 1500;
-        imgContainer.classList.add("h-5/6", "grow", "basis-1/2", "flex", "justify-center", "items-center");
     }
-    imgContainer.appendChild(img);
-    return imgContainer;
+    return img;
 }
 function move(direction, imgContainer, imgSources) {
     if (direction === "right") {
@@ -75,7 +88,10 @@ function move(direction, imgContainer, imgSources) {
 function skipBar(imgSources, classes) {
     const skipNav = document.createElement("nav");
     imgSources.forEach((src) => {
-        skipNav.appendChild(image(src, true));
+        const thumbnail = image(src, true);
+        const thumbContainer = createImageContainer("thumbnail");
+        thumbContainer.appendChild(thumbnail);
+        skipNav.appendChild(thumbContainer);
     });
     skipNav.classList.add("flex", "basis-full", "order-2", "items-center", "gap-1", "p-3", "rounded-lg", "bg-black");
     if (classes)

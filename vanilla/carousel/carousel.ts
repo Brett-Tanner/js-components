@@ -2,11 +2,15 @@ let currentImageIndex = 0;
 
 function carousel(imgSources: string[], classes: carouselStyles) {
   const container = document.createElement("div");
-  const imgContainer = container.appendChild(
-    image(imgSources[currentImageIndex], false)
-  );
+  const centerContainer = container.appendChild(createImageContainer("center"));
+  centerContainer.appendChild(image(imgSources[0], false));
   container.appendChild(skipBar(imgSources, classes.nav));
-  addArrows(container, imgContainer, imgSources);
+  addArrows(container, centerContainer, imgSources);
+  window.addEventListener("keydown", (e) => {
+    e.key === "ArrowRight"
+      ? move("right", centerContainer, imgSources)
+      : move("left", centerContainer, imgSources);
+  });
 
   container.classList.add(
     "h-screen",
@@ -18,6 +22,7 @@ function carousel(imgSources: string[], classes: carouselStyles) {
     "bg-gray-700"
   );
   if (classes.container) container.classList.add(...classes.container);
+
   return container;
 }
 
@@ -53,13 +58,32 @@ function createArrow(direction: "left" | "right") {
   return arrow;
 }
 
-function image(src: string, thumbnail: boolean) {
+function createImageContainer(role: "left" | "center" | "right" | "thumbnail") {
   const imgContainer = document.createElement("div");
+
+  switch (role) {
+    case "center":
+      imgContainer.classList.add(
+        "h-5/6",
+        "grow",
+        "basis-1/2",
+        "flex",
+        "justify-center",
+        "items-center"
+      );
+      break;
+
+    default:
+      break;
+  }
+
+  return imgContainer;
+}
+
+function image(src: string, thumbnail: boolean) {
   const img = document.createElement("img");
   img.src = thumbnail ? src.replace(/images/g, "/images/thumbnails/") : src;
   img.classList.add("h-full", "w-auto");
-
-  console.log(img);
 
   if (thumbnail) {
     img.width = 100;
@@ -67,18 +91,9 @@ function image(src: string, thumbnail: boolean) {
   } else {
     img.width = 1500;
     img.height = 1500;
-    imgContainer.classList.add(
-      "h-5/6",
-      "grow",
-      "basis-1/2",
-      "flex",
-      "justify-center",
-      "items-center"
-    );
   }
-  imgContainer.appendChild(img);
 
-  return imgContainer;
+  return img;
 }
 
 function move(
@@ -107,7 +122,10 @@ function move(
 function skipBar(imgSources: string[], classes: string[] | undefined) {
   const skipNav = document.createElement("nav");
   imgSources.forEach((src) => {
-    skipNav.appendChild(image(src, true));
+    const thumbnail = image(src, true);
+    const thumbContainer = createImageContainer("thumbnail");
+    thumbContainer.appendChild(thumbnail);
+    skipNav.appendChild(thumbContainer);
   });
 
   skipNav.classList.add(
