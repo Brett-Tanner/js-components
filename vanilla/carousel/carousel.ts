@@ -1,16 +1,18 @@
+const currentImageIndex = 0;
+
 function carousel(imgSources: string[], classes: carouselStyles) {
   const container = document.createElement("div");
-  imgSources.slice(0, 3).forEach((src) => {
-    container.appendChild(image(src, false));
-  });
+  container.appendChild(image(imgSources[currentImageIndex], false));
   container.appendChild(skipBar(imgSources, classes.nav));
   addArrows(container);
 
   container.classList.add(
-    "relative",
-    "flex",
-    "items-center",
     "h-screen",
+    "flex",
+    "flex-wrap",
+    "items-center",
+    "p-3",
+    "gap-3",
     "bg-gray-700"
   );
   if (classes.container) container.classList.add(...classes.container);
@@ -25,30 +27,17 @@ function addArrows(container: HTMLDivElement) {
 }
 
 function createArrow(direction: "left" | "right") {
-  const arrow = document.createElement("div");
+  const arrow = document.createElement("button");
 
-  const upLine = document.createElement("hr");
-  upLine.classList.add("border-4", "w-10");
   if (direction === "left") {
-    upLine.classList.add("-rotate-45", "origin-right");
+    arrow.classList.add("-order-1");
+    arrow.innerText = "◀";
   } else if (direction === "right") {
-    upLine.classList.add("rotate-45", "origin-left");
-  }
-
-  const downLine = document.createElement("hr");
-  downLine.classList.add("border-4", "w-10");
-  if (direction === "left") {
-    downLine.classList.add("rotate-45", "origin-left");
-  } else if (direction === "right") {
-    downLine.classList.add("-rotate-45", "origin-right");
-  }
-
-  arrow.append(downLine, upLine);
-  if (direction === "left") {
     arrow.classList.add("order-1");
-  } else if (direction === "right") {
-    arrow.classList.add("order-4");
+    arrow.innerText = "▶";
   }
+  arrow.classList.add("text-slate-400", "text-7xl", "self-stretch");
+
   return arrow;
 }
 
@@ -56,10 +45,23 @@ function image(src: string, thumbnail: boolean) {
   const imgContainer = document.createElement("div");
   const img = document.createElement("img");
   img.src = thumbnail ? src.replace(/images/g, "/images/thumbnails/") : src;
-  img.classList.add("w-100");
+  img.classList.add("h-full", "w-auto");
 
-  imgContainer.classList.add("w-1/2");
-  if (thumbnail) imgContainer.classList.add("z-50");
+  if (thumbnail) {
+    img.width = 100;
+    img.height = 100;
+  } else {
+    img.width = 1500;
+    img.height = 1500;
+    imgContainer.classList.add(
+      "h-5/6",
+      "grow",
+      "basis-1/2",
+      "flex",
+      "justify-center",
+      "items-center"
+    );
+  }
   imgContainer.appendChild(img);
 
   return imgContainer;
@@ -72,11 +74,9 @@ function skipBar(imgSources: string[], classes: string[] | undefined) {
   });
 
   skipNav.classList.add(
-    "absolute",
-    "bottom-3",
-    "right-3",
-    "left-3",
     "flex",
+    "basis-full",
+    "order-2",
     "items-center",
     "gap-1",
     "p-3",
